@@ -3,6 +3,7 @@ package serializer
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type Response struct {
@@ -19,14 +20,12 @@ const (
 	CodeNotFoundError = 20008
 	CodePasswordError = 20009
 	CodeTokenError    = 20009
-	CodeExistsError   = 20010
-	CodeBotError      = 20011
 )
 
 func NeedLogin(c *gin.Context) {
-	c.JSON(401, Response{
+	c.JSON(http.StatusUnauthorized, Response{
 		Code:    CodeNeedLogin,
-		Message: "The user is not logged in, please log in and then perform another operation",
+		Message: "User login has expired, please log in again",
 	})
 }
 
@@ -71,12 +70,7 @@ func TokenError(err error) Response {
 	return Err(CodeTokenError, msg, err)
 }
 
-func ExistsError() Response {
+func NotFoundError(err error) Response {
 	msg := "User google key already exists"
-	return Err(CodeExistsError, msg, errors.New("user google key already exists"))
-}
-
-func RunError(err error) Response {
-	msg := "Run Error"
-	return Err(CodeBotError, msg, err)
+	return Err(CodeNotFoundError, msg, err)
 }

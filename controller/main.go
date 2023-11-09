@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Login(c *gin.Context) {
+func LoginController(c *gin.Context) {
 	var request service.Login
 	if err := c.Bind(&request); err == nil {
 		res := request.Login()
@@ -14,4 +14,8 @@ func Login(c *gin.Context) {
 	} else {
 		c.JSON(400, serializer.ParamError(err))
 	}
+}
+
+func RegisterController(c *gin.Context) {
+
 }

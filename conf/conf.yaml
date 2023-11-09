@@ -2,14 +2,14 @@ name: "ace"
 version: "0.0.1"
 mode: "debug"
 host: "127.0.0.1"
-port: 9001
+port: 8080
 
 redis:
     host: "127.0.0.1"
     port: 6379
     username: ""
     password: ""
-    db: 3
+    db: 0
 mysql:
     host: "127.0.0.1"
     port: 3306

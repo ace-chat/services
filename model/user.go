@@ -8,25 +8,28 @@ import (
 
 // User Background login user
 type User struct {
-	Id        uint           `gorm:"primaryKey;column:id;type:int(255);comment:id" json:"id"`
-	Username  string         `gorm:"column:username;type:varchar(40);comment:username" json:"username"`
-	Password  string         `gorm:"column:password;type:varchar(80);comment:password" json:"password"`
-	GoogleKey string         `gorm:"column:google_key;type:varchar(20);comment:google auth key" json:"google_key"`
-	Status    string         `gorm:"column:status;type:varchar(10);comment:account status" json:"status"`
-	Remark    string         `gorm:"column:remark;type:varchar(40);comment:remark" json:"remark"`
-	CreatedAt time.Time      `gorm:"column:created_at;comment:create at time" json:"created_at"`
-	UpdatedAt time.Time      `gorm:"column:updated_at;comment:update at time" json:"updated_at"`
-	DeletedAt gorm.DeletedAt `gorm:"index;column:deleted_at;comment:delete at time" json:"deleted_at"`
+	Id          uint           `gorm:"primaryKey;column:id;type:int(255);comment:id" json:"id"`
+	Username    string         `gorm:"column:username;type:varchar(40);comment:username" json:"username"`
+	DisplayName string         `gorm:"column:display_name;type:varchar(80);comment:display name" json:"display_name"`
+	Email       string         `gorm:"column:email;type:varchar(120);comment:email" json:"email"`
+	Avatar      string         `gorm:"column:avatar;type:varchar(120);comment:user avatar" json:"avatar"`
+	Phone       string         `gorm:"column:phone;type:varchar(100);comment:user phone" json:"phone"`
+	Password    string         `gorm:"column:password;type:varchar(200);comment:password" json:"password"`
+	PlanId      uint           `gorm:"column:plan_id;type:int(255);comment:user plan, according to plan table" json:"plan_id"`
+	Status      string         `gorm:"column:status;type:varchar(10);comment:" json:"status"`
+	CreatedAt   time.Time      `gorm:"column:created_at" json:"created_at"`
+	UpdatedAt   time.Time      `gorm:"column:updated_at" json:"updated_at"`
+	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at" json:"deleted_at"`
 }
 
 const (
 	// PassWordCost
 	PassWordCost = 12
-	// Active active user status
+	// Active user status
 	Active string = "active"
-	// Inactive inactive user status
+	// Inactive user status
 	Inactive string = "inactive"
-	// Suspend suspend user status
+	// Suspend user status
 	Suspend string = "suspend"
 )
 
