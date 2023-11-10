@@ -9,9 +9,8 @@ import (
 )
 
 type Login struct {
-	Username  string `form:"username" json:"username" binding:"required"`
-	Password  string `form:"password" json:"password" binding:"required"`
-	GoogleKey string `form:"google_key" json:"google_key" binding:"required"`
+	Username string `form:"username" json:"username" binding:"required"`
+	Password string `form:"password" json:"password" binding:"required"`
 }
 
 func (l *Login) Login() serializer.Response {
