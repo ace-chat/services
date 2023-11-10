@@ -16,10 +16,3 @@ mysql:
     username: "root"
     password: "Chenhan0804"
     db: "ace"
-telegram:
-    key: "6328845358:AAFQj2oC71GA5H-3q9dmaPzcelyIKFVEwFU"
-    appId: 27113010
-    appHash: "2ad7ec3c40776fd759d5e31b241314a3"
-upload:
-  relative: 'D:\1\'
-  path: 'https://visiapay.com/images/'

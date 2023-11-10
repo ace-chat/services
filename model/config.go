@@ -7,10 +7,8 @@ type Config struct {
 	Host    string `yaml:"host" json:"host"`
 	Port    int    `yaml:"port" json:"port"`
 
-	Redis    Redis    `yaml:"redis" json:"redis"`
-	Mysql    Mysql    `yaml:"mysql" json:"mysql"`
-	Telegram Telegram `yaml:"telegram" json:"telegram"`
-	Upload   Upload   `yaml:"upload"`
+	Redis Redis `yaml:"redis" json:"redis"`
+	Mysql Mysql `yaml:"mysql" json:"mysql"`
 }
 
 type Redis struct {
@@ -27,15 +25,4 @@ type Mysql struct {
 	Username string `yaml:"username" json:"username"`
 	Password string `yaml:"password" json:"password"`
 	DB       string `yaml:"db" json:"db"`
-}
-
-type Telegram struct {
-	Key     string `yaml:"key" json:"key"`
-	AppId   int    `yaml:"appId" json:"appId"`
-	AppHash string `yaml:"appHash" json:"appHash"`
-}
-
-type Upload struct {
-	Path     string `yaml:"path"`
-	Relative string `yaml:"relative"`
 }
