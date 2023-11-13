@@ -32,6 +32,7 @@ func NewServer(mode string) *gin.Engine {
 			common.GET("/voices", controller.CommonVoices)
 			common.POST("/createVoice", controller.CommonCreateVoice)
 			common.GET("/languages", controller.CommonLanguages)
+			common.GET("/genders", controller.CommonGender)
 		}
 
 		content := api.Group("/content")

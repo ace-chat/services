@@ -79,3 +79,13 @@ func CommonLanguages(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, serializer.ParamError(err))
 	}
 }
+
+func CommonGender(c *gin.Context) {
+	var request service.GenderRequest
+	if err := c.Bind(&request); err == nil {
+		res := request.GetGender()
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, serializer.ParamError(err))
+	}
+}
