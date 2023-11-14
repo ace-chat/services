@@ -1,6 +1,7 @@
 package service
 
 import (
+	"ace/cache"
 	"ace/model"
 	"ace/serializer"
 )
@@ -18,6 +19,10 @@ func (r *RegisterRequest) Register() serializer.Response {
 	}
 	if err := user.SetPassword(r.Password); err != nil {
 		return serializer.PasswordError()
+	}
+
+	if err := cache.DB.Model(&model.User{}).Create(&user).Error; err != nil {
+		return serializer.DBError(err)
 	}
 
 	return serializer.GeneratorUser(user)
