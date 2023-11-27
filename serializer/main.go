@@ -111,3 +111,8 @@ func NotFoundGenderError(err error) Response {
 	msg := "gender invalid, please make sure you select the correct gender"
 	return Err(CodeNotFoundGeneratorItemError, msg, err)
 }
+
+func NotFoundTypeError(err error) Response {
+	msg := "type invalid, please make sure you select the correct type"
+	return Err(CodeNotFoundGeneratorItemError, msg, err)
+}

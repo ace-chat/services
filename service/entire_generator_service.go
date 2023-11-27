@@ -15,6 +15,7 @@ import (
 type EntireGeneratorRequest struct {
 	Topic        string `form:"topic" json:"topic" binding:"required"`
 	Tones        int    `form:"tones" json:"tones" binding:"required"`
+	Type         int    `form:"type" json:"type" binding:"required"`
 	BrandVoice   int    `form:"brand_voice" json:"brand_voice"`
 	Keyword      string `form:"keyword" json:"keyword"`
 	MinAge       int    `form:"min_age" json:"min_age"`
@@ -51,6 +52,14 @@ func (t *EntireGeneratorRequest) Generator(user model.User) serializer.Response 
 		return serializer.DBError(err)
 	}
 
+	ty, err := tools.GetType(uint(t.Type))
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return serializer.NotFoundTypeError(err)
+		}
+		return serializer.DBError(err)
+	}
+
 	blog := model.BlogAds{
 		UserId:       user.Id,
 		Type:         3,
@@ -81,6 +90,7 @@ func (t *EntireGeneratorRequest) Generator(user model.User) serializer.Response 
 		"word_count":    t.WordCount,
 		"other_details": t.OtherDetails,
 		"lang":          language.Iso,
+		"type":          ty.Value,
 	}
 
 	body, err := request.Client.Post(model.Url["generate_blog_entire"])

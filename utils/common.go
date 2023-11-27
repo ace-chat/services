@@ -58,3 +58,12 @@ func (*Common) GetLanguage(id uint) (*model.Language, error) {
 
 	return &language, nil
 }
+
+func (*Common) GetType(id uint) (*model.Type, error) {
+	var t model.Type
+	if err := cache.DB.Model(&model.Type{}).Where("id = ?", id).First(&t).Error; err != nil {
+		return nil, err
+	}
+
+	return &t, nil
+}
