@@ -63,6 +63,8 @@ func (t *VoiceGeneratorRequest) Generator(user model.User) serializer.Response {
 		return serializer.GeneratorError(err)
 	}
 
+	zap.L().Info("[Generate] Optimize Match Brand Voice Content", zap.String("content", string(body)))
+
 	content := model.OptimizedContent{
 		Type:   4,
 		AdsId:  ads.Id,

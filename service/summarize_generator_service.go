@@ -54,6 +54,8 @@ func (t *SummarizeGeneratorRequest) Generator(user model.User) serializer.Respon
 		return serializer.GeneratorError(err)
 	}
 
+	zap.L().Info("[Generate] Optimize Summarize Content", zap.String("content", string(body)))
+
 	content := model.OptimizedContent{
 		Type:   2,
 		AdsId:  ads.Id,

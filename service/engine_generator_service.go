@@ -118,6 +118,8 @@ func (e *EngineGeneratorRequest) Generator(user model.User) serializer.Response 
 		return serializer.GeneratorError(err)
 	}
 
+	zap.L().Info("[Generate] Search Engine Content", zap.String("content", string(body)))
+
 	content := model.EngineContent{
 		AdsId:  media.Id,
 		UserId: user.Id,

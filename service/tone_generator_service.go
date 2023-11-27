@@ -63,6 +63,8 @@ func (t *ToneGeneratorRequest) Generator(user model.User) serializer.Response {
 		return serializer.GeneratorError(err)
 	}
 
+	zap.L().Info("[Generate] Optimize Change Tone Content", zap.String("content", string(body)))
+
 	content := model.OptimizedContent{
 		Type:   1,
 		AdsId:  ads.Id,

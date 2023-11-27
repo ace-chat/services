@@ -52,6 +52,8 @@ func (t *ParaphraseGeneratorRequest) Generator(user model.User) serializer.Respo
 		return serializer.GeneratorError(err)
 	}
 
+	zap.L().Info("[Generate] Optimize Paraphrase Content", zap.String("content", string(body)))
+
 	content := model.OptimizedContent{
 		Type:   3,
 		AdsId:  ads.Id,

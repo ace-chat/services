@@ -80,6 +80,8 @@ func (t *AudienceGeneratorRequest) Generator(user model.User) serializer.Respons
 		return serializer.GeneratorError(err)
 	}
 
+	zap.L().Info("[Generate] Optimize Target Audience Content", zap.String("content", string(body)))
+
 	content := model.OptimizedContent{
 		Type:   5,
 		AdsId:  ads.Id,

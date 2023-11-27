@@ -118,6 +118,8 @@ func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 		return serializer.GeneratorError(err)
 	}
 
+	zap.L().Info("[Generate] Social Media Content", zap.String("content", string(body)))
+
 	content := model.MediaContent{
 		AdsId:  media.Id,
 		UserId: user.Id,
