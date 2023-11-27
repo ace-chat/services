@@ -89,3 +89,13 @@ func CommonGender(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, serializer.ParamError(err))
 	}
 }
+
+func CommonTypes(c *gin.Context) {
+	var request service.TypesRequest
+	if err := c.Bind(&request); err == nil {
+		res := request.GetTypes()
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, serializer.ParamError(err))
+	}
+}

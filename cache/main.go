@@ -27,6 +27,7 @@ func migration() {
 		&model.Region{},
 		&model.Platform{},
 		&model.Language{},
+		&model.Type{},
 	)
 
 	if err != nil {

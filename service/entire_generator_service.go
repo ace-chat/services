@@ -75,7 +75,7 @@ func (t *EntireGeneratorRequest) Generator(user model.User) serializer.Response 
 		"topic":         t.Topic,
 		"tone":          tone.Value,
 		"brand_voice":   voice.Content,
-		"keyword":       t.Keyword,
+		"keywords":      t.Keyword,
 		"min_age":       t.MinAge,
 		"max_age":       t.MaxAge,
 		"word_count":    t.WordCount,
