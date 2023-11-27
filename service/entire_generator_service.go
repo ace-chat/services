@@ -72,12 +72,15 @@ func (t *EntireGeneratorRequest) Generator(user model.User) serializer.Response 
 	}
 
 	request.Client.Body = map[string]any{
-		"topic":       t.Topic,
-		"tone":        tone.Value,
-		"brand_voice": voice.Content,
-		"min_age":     t.MinAge,
-		"max_age":     t.MaxAge,
-		"lang":        language.Iso,
+		"topic":         t.Topic,
+		"tone":          tone.Value,
+		"brand_voice":   voice.Content,
+		"keyword":       t.Keyword,
+		"min_age":       t.MinAge,
+		"max_age":       t.MaxAge,
+		"word_count":    t.WordCount,
+		"other_details": t.OtherDetails,
+		"lang":          language.Iso,
 	}
 
 	body, err := request.Client.Post(model.Url["generate_blog_entire"])
