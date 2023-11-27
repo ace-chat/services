@@ -5,6 +5,7 @@ import (
 	"ace/model"
 	"ace/serializer"
 	"errors"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -12,12 +13,13 @@ type WelcomeHistoryIdRequest struct {
 	Id uint `form:"id" json:"id" binding:"required"`
 }
 
-func (m *WelcomeHistoryIdRequest) GetToneContentById(user model.User) serializer.Response {
+func (m *WelcomeHistoryIdRequest) GetWelcomeContentById(user model.User) serializer.Response {
 	var content model.EmailContent
 	if err := cache.DB.Model(&model.EmailContent{}).Where("user_id = ? AND id = ?", user.Id, m.Id).First(&content).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
+		zap.L().Error("[Welcome] Get email content failure", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -26,6 +28,7 @@ func (m *WelcomeHistoryIdRequest) GetToneContentById(user model.User) serializer
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
+		zap.L().Error("[Welcome] Get email ads failure", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

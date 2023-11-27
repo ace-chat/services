@@ -16,3 +16,8 @@ mysql:
     username: "root"
     password: "Chenhan0804"
     db: "ace"
+request:
+    url: "http://178.128.96.65:9005"
+logger:
+    level: ""
+    path: ""

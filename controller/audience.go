@@ -49,7 +49,7 @@ func AudienceHistoryById(c *gin.Context) {
 			c.Abort()
 			return
 		}
-		res := request.GetToneContentById(user.(model.User))
+		res := request.GetAudienceContentById(user.(model.User))
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusBadRequest, serializer.ParamError(err))

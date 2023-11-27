@@ -14,12 +14,14 @@ type Response struct {
 }
 
 const (
-	CodeNeedLogin     = 20005
-	CodeDBError       = 20006
-	CodeParamError    = 20007
-	CodeNotFoundError = 20008
-	CodePasswordError = 20009
-	CodeTokenError    = 20009
+	CodeNeedLogin                  = 20005
+	CodeDBError                    = 20006
+	CodeParamError                 = 20007
+	CodeNotFoundError              = 20008
+	CodePasswordError              = 20009
+	CodeTokenError                 = 20010
+	CodeGeneratorError             = 20011
+	CodeNotFoundGeneratorItemError = 20012
 )
 
 func NeedLogin(c *gin.Context) {
@@ -73,4 +75,39 @@ func TokenError(err error) Response {
 func NotFoundError(err error) Response {
 	msg := "User google key already exists"
 	return Err(CodeNotFoundError, msg, err)
+}
+
+func GeneratorError(err error) Response {
+	msg := "Generator ADS failure"
+	return Err(CodeGeneratorError, msg, err)
+}
+
+func NotFoundPlatformError(err error) Response {
+	msg := "platform invalid, please make sure you select the correct platform"
+	return Err(CodeNotFoundGeneratorItemError, msg, err)
+}
+
+func NotFoundToneError(err error) Response {
+	msg := "tone invalid, please make sure you select the correct tone"
+	return Err(CodeNotFoundGeneratorItemError, msg, err)
+}
+
+func NotFoundVoiceError(err error) Response {
+	msg := "brand voice invalid, please make sure you select the correct brand voice"
+	return Err(CodeNotFoundGeneratorItemError, msg, err)
+}
+
+func NotFoundRegionError(err error) Response {
+	msg := "region invalid, please make sure you select the correct region"
+	return Err(CodeNotFoundGeneratorItemError, msg, err)
+}
+
+func NotFoundLanguageError(err error) Response {
+	msg := "language invalid, please make sure you select the correct language"
+	return Err(CodeNotFoundGeneratorItemError, msg, err)
+}
+
+func NotFoundGenderError(err error) Response {
+	msg := "gender invalid, please make sure you select the correct gender"
+	return Err(CodeNotFoundGeneratorItemError, msg, err)
 }

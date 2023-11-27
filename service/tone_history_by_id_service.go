@@ -5,6 +5,7 @@ import (
 	"ace/model"
 	"ace/serializer"
 	"errors"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -18,6 +19,7 @@ func (m *ToneHistoryIdRequest) GetToneContentById(user model.User) serializer.Re
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
+		zap.L().Error("[Tone] Get optimized ads content failure", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -26,6 +28,7 @@ func (m *ToneHistoryIdRequest) GetToneContentById(user model.User) serializer.Re
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
+		zap.L().Error("[Tone] Get optimized ads failure", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

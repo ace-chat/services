@@ -41,17 +41,18 @@ func VoiceHistory(c *gin.Context) {
 }
 
 func VoiceHistoryById(c *gin.Context) {
-	var request service.ParaphraseHistoryIdRequest
-	if err := c.Bind(&request); err == nil {
-		user, ok := c.Get("user")
-		if !ok {
-			serializer.NeedLogin(c)
-			c.Abort()
-			return
-		}
-		res := request.GetToneContentById(user.(model.User))
-		c.JSON(http.StatusOK, res)
-	} else {
-		c.JSON(http.StatusBadRequest, serializer.ParamError(err))
-	}
+	// TODO voice history api
+	//var request service.ParaphraseHistoryIdRequest
+	//if err := c.Bind(&request); err == nil {
+	//	user, ok := c.Get("user")
+	//	if !ok {
+	//		serializer.NeedLogin(c)
+	//		c.Abort()
+	//		return
+	//	}
+	//	res := request.GetToneContentById(user.(model.User))
+	//	c.JSON(http.StatusOK, res)
+	//} else {
+	//	c.JSON(http.StatusBadRequest, serializer.ParamError(err))
+	//}
 }

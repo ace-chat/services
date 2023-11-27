@@ -3,9 +3,12 @@ package main
 import (
 	"ace/cache"
 	"ace/conf"
+	"ace/logger"
+	"ace/request"
 	"ace/server"
 	"flag"
 	"fmt"
+	"go.uber.org/zap"
 	"os"
 )
 
@@ -15,6 +18,9 @@ func main() {
 	flag.Parse()
 	config := conf.GetConf(path)
 
+	logger.NewLogger(config.Mode, config.Name, config.Logger)
+	request.Setup(config.Request)
+
 	cache.InitRedis(config.Redis)
 	cache.InitMysql(config.Mysql)
 
@@ -22,7 +28,7 @@ func main() {
 
 	err := r.Run(fmt.Sprintf("%s:%d", config.Host, config.Port))
 	if err != nil {
-		fmt.Printf("Start server failed, error: %v \n", err.Error())
+		zap.L().Error("[Service] Start server failure", zap.Error(err))
 		os.Exit(0)
 	}
 }

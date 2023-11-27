@@ -3,6 +3,7 @@ package cache
 import (
 	"ace/model"
 	"fmt"
+	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -26,13 +27,13 @@ func InitMysql(conf model.Mysql) {
 	}
 	db, err := gorm.Open(mysql.Open(dsn), &config)
 	if err != nil {
-		fmt.Printf("Open mysql error: %v \n", err.Error())
+		zap.L().Error("[Mysql] Open mysql failure", zap.Error(err))
 		os.Exit(1)
 	}
 
 	sqlDB, err := db.DB()
 	if err != nil {
-		fmt.Printf("DealWith mysql error: %v \n", err.Error())
+		zap.L().Error("[Mysql] DealWith mysql connection failure", zap.Error(err))
 		os.Exit(1)
 	}
 

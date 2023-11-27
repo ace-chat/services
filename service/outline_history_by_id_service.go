@@ -5,6 +5,7 @@ import (
 	"ace/model"
 	"ace/serializer"
 	"errors"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -18,6 +19,7 @@ func (m *OutlineHistoryIdRequest) GetOutlineContentById(user model.User) seriali
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
+		zap.L().Error("[Outline] Get blog content failure", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -26,6 +28,7 @@ func (m *OutlineHistoryIdRequest) GetOutlineContentById(user model.User) seriali
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
+		zap.L().Error("[Outline] Get blog ads failure", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

@@ -3,7 +3,12 @@ package service
 import (
 	"ace/cache"
 	"ace/model"
+	"ace/request"
 	"ace/serializer"
+	"ace/utils"
+	"errors"
+	"go.uber.org/zap"
+	"gorm.io/gorm"
 	"net/http"
 )
 
@@ -14,7 +19,25 @@ type VoiceGeneratorRequest struct {
 }
 
 func (t *VoiceGeneratorRequest) Generator(user model.User) serializer.Response {
-	tone := model.OptimizedAds{
+	var tools utils.Common
+
+	voice, err := tools.GetVoice(uint(t.BrandVoice), user.Id)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return serializer.NotFoundVoiceError(err)
+		}
+		return serializer.DBError(err)
+	}
+
+	language, err := tools.GetLanguage(uint(t.Language))
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return serializer.NotFoundLanguageError(err)
+		}
+		return serializer.DBError(err)
+	}
+
+	ads := model.OptimizedAds{
 		UserId:     user.Id,
 		Type:       4,
 		Text:       t.Text,
@@ -23,19 +46,31 @@ func (t *VoiceGeneratorRequest) Generator(user model.User) serializer.Response {
 	}
 
 	tx := cache.DB.Begin()
-	if err := tx.Model(&model.OptimizedAds{}).Create(&tone).Error; err != nil {
+	if err := tx.Model(&model.OptimizedAds{}).Create(&ads).Error; err != nil {
+		zap.L().Error("[Voice] Create optimized ads failure", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}
 
-	// TODO Generate OptimizedAds Content Change Tone
+	request.Client.Body = map[string]any{
+		"text":        t.Text,
+		"brand_voice": voice.Content,
+		"lang":        language.Iso,
+	}
+
+	body, err := request.Client.Post(model.Url["generate_optimize_match_brand_voice"])
+	if err != nil {
+		return serializer.GeneratorError(err)
+	}
+
 	content := model.OptimizedContent{
 		Type:   4,
-		AdsId:  tone.Id,
+		AdsId:  ads.Id,
 		UserId: user.Id,
-		Text:   "testsuite",
+		Text:   string(body),
 	}
 	if err := tx.Model(&model.OptimizedContent{}).Create(&content).Error; err != nil {
+		zap.L().Error("[Voice] Create optimized content failure", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}

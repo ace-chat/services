@@ -3,7 +3,12 @@ package service
 import (
 	"ace/cache"
 	"ace/model"
+	"ace/request"
 	"ace/serializer"
+	"ace/utils"
+	"errors"
+	"go.uber.org/zap"
+	"gorm.io/gorm"
 	"net/http"
 )
 
@@ -19,7 +24,49 @@ type FreestyleGeneratorRequest struct {
 }
 
 func (t *FreestyleGeneratorRequest) Generator(user model.User) serializer.Response {
-	tone := model.EmailAds{
+	var tools utils.Common
+
+	tone, err := tools.GetTone(uint(t.Tones))
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return serializer.NotFoundToneError(err)
+		}
+		return serializer.DBError(err)
+	}
+
+	voice, err := tools.GetVoice(uint(t.BrandVoice), user.Id)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return serializer.NotFoundVoiceError(err)
+		}
+		return serializer.DBError(err)
+	}
+
+	region, err := tools.GetRegion(uint(t.Region))
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return serializer.NotFoundRegionError(err)
+		}
+		return serializer.DBError(err)
+	}
+
+	gender, err := tools.GetGender(uint(t.Gender))
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return serializer.NotFoundGenderError(err)
+		}
+		return serializer.DBError(err)
+	}
+
+	language, err := tools.GetLanguage(uint(t.Language))
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return serializer.NotFoundLanguageError(err)
+		}
+		return serializer.DBError(err)
+	}
+
+	ads := model.EmailAds{
 		UserId:     user.Id,
 		Type:       1,
 		Detail:     t.Detail,
@@ -31,19 +78,36 @@ func (t *FreestyleGeneratorRequest) Generator(user model.User) serializer.Respon
 	}
 
 	tx := cache.DB.Begin()
-	if err := tx.Model(&model.EmailAds{}).Create(&tone).Error; err != nil {
+	if err := tx.Model(&model.EmailAds{}).Create(&ads).Error; err != nil {
+		zap.L().Error("[Freestyle] Create email ads failure", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}
 
-	// TODO Generate OptimizedAds Content Change Tone
+	request.Client.Body = map[string]any{
+		"text":        t.Detail,
+		"tone":        tone.Value,
+		"brand_voice": voice.Content,
+		"region":      region.Iso,
+		"gender":      gender.Value,
+		"min_age":     t.MinAge,
+		"max_age":     t.MaxAge,
+		"lang":        language.Iso,
+	}
+
+	body, err := request.Client.Post(model.Url["generate_freestyle_email_content"])
+	if err != nil {
+		return serializer.GeneratorError(err)
+	}
+
 	content := model.EmailContent{
 		Type:   1,
-		AdsId:  tone.Id,
+		AdsId:  ads.Id,
 		UserId: user.Id,
-		Text:   "testsuite",
+		Text:   string(body),
 	}
 	if err := tx.Model(&model.EmailContent{}).Create(&content).Error; err != nil {
+		zap.L().Error("[Freestyle] Create email content failure", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}

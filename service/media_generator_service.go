@@ -3,7 +3,12 @@ package service
 import (
 	"ace/cache"
 	"ace/model"
+	"ace/request"
 	"ace/serializer"
+	"ace/utils"
+	"errors"
+	"go.uber.org/zap"
+	"gorm.io/gorm"
 	"net/http"
 )
 
@@ -22,6 +27,56 @@ type MediaGeneratorRequest struct {
 }
 
 func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
+	var tools utils.Common
+
+	platform, err := tools.GetPlatform(uint(m.Platform))
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return serializer.NotFoundPlatformError(err)
+		}
+		return serializer.DBError(err)
+	}
+
+	tone, err := tools.GetTone(uint(m.Tones))
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return serializer.NotFoundToneError(err)
+		}
+		return serializer.DBError(err)
+	}
+
+	voice, err := tools.GetVoice(uint(m.BrandVoice), user.Id)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return serializer.NotFoundVoiceError(err)
+		}
+		return serializer.DBError(err)
+	}
+
+	region, err := tools.GetRegion(uint(m.Region))
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return serializer.NotFoundRegionError(err)
+		}
+		return serializer.DBError(err)
+	}
+
+	gender, err := tools.GetGender(uint(m.Gender))
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return serializer.NotFoundRegionError(err)
+		}
+		return serializer.DBError(err)
+	}
+
+	language, err := tools.GetLanguage(uint(m.Language))
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return serializer.NotFoundLanguageError(err)
+		}
+		return serializer.DBError(err)
+	}
+
 	media := model.MediaAds{
 		UserId:      user.Id,
 		PlatformId:  uint(m.Platform),
@@ -39,17 +94,37 @@ func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 
 	tx := cache.DB.Begin()
 	if err := tx.Model(&model.MediaAds{}).Create(&media).Error; err != nil {
+		zap.L().Error("[Media] Create social media ads failure", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}
 
-	// TODO generator social media ads content
+	request.Client.Body = map[string]any{
+		"platform":            platform.Value,
+		"brand_name":          m.BrandName,
+		"product_name":        m.ServiceName,
+		"product_description": m.ServiceDesc,
+		"tone":                tone.Value,
+		"brand_voice":         voice.Content,
+		"region":              region.Iso,
+		"gender":              gender.Value,
+		"min_age":             m.MinAge,
+		"max_age":             m.MaxAge,
+		"lang":                language.Iso,
+	}
+
+	body, err := request.Client.Post(model.Url["generator_social_media"])
+	if err != nil {
+		return serializer.GeneratorError(err)
+	}
+
 	content := model.MediaContent{
 		AdsId:  media.Id,
 		UserId: user.Id,
-		Text:   "testsuite",
+		Text:   string(body),
 	}
 	if err := tx.Model(&model.MediaContent{}).Create(&content).Error; err != nil {
+		zap.L().Error("[Media] Create social media ads content failure", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}

@@ -5,6 +5,7 @@ import (
 	"ace/model"
 	"ace/serializer"
 	"errors"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -19,6 +20,7 @@ func (l *Login) Login() serializer.Response {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.UserNotFoundError(err)
 		} else {
+			zap.L().Error("[Login] Get user failure", zap.Error(err))
 			return serializer.DBError(err)
 		}
 	}

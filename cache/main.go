@@ -2,7 +2,7 @@ package cache
 
 import (
 	"ace/model"
-	"fmt"
+	"go.uber.org/zap"
 	"os"
 )
 
@@ -30,7 +30,7 @@ func migration() {
 	)
 
 	if err != nil {
-		fmt.Printf("AutoMigrate error: %v", err.Error())
+		zap.L().Error("[Mysql] AutoMigrate mysql table failure", zap.Error(err))
 		os.Exit(1)
 	}
 }

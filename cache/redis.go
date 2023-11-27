@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/redis/go-redis/v9"
+	"go.uber.org/zap"
 	"os"
 )
 
@@ -21,7 +22,7 @@ func InitRedis(conf model.Redis) {
 
 	err := rdb.Ping(ctx).Err()
 	if err != nil {
-		fmt.Printf("Ping redis error: %v \n", err.Error())
+		zap.L().Error("[Redis] Ping redis failure", zap.Error(err))
 		os.Exit(2)
 	}
 	Client = rdb

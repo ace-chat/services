@@ -8,9 +8,9 @@ import (
 
 func NewServer(mode string) *gin.Engine {
 	gin.SetMode(mode)
-	r := gin.Default()
+	r := gin.New()
 
-	r.Use(middleware.Cors())
+	r.Use(middleware.Cors(), middleware.Logger(), middleware.Recovery())
 
 	api := r.Group("/api/v1")
 	{
