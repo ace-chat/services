@@ -13,20 +13,32 @@ import (
 )
 
 type FreestyleGeneratorRequest struct {
-	Detail     string `form:"detail" json:"detail" binding:"required"`
-	Tones      int    `form:"tones" json:"tones" binding:"required"`
-	BrandVoice int    `form:"brand_voice" json:"brand_voice"`
-	Region     int    `form:"region" json:"region"`
-	Gender     int    `form:"gender" json:"gender"`
-	MinAge     int    `form:"min_age" json:"min_age"`
-	MaxAge     int    `form:"max_age" json:"max_age"`
-	Language   int    `form:"language" json:"language" binding:"required"`
+	Detail     *string `form:"detail" json:"detail" binding:"required"`
+	Tones      *int    `form:"tones" json:"tones" binding:"required"`
+	BrandVoice *int    `form:"brand_voice" json:"brand_voice"`
+	Region     *int    `form:"region" json:"region"`
+	Gender     *int    `form:"gender" json:"gender"`
+	MinAge     *int    `form:"min_age" json:"min_age"`
+	MaxAge     *int    `form:"max_age" json:"max_age"`
+	Language   *int    `form:"language" json:"language" binding:"required"`
 }
 
 func (t *FreestyleGeneratorRequest) Generator(user model.User) serializer.Response {
 	var tools utils.Common
 
-	tone, err := tools.GetTone(uint(t.Tones))
+	var minimum, maximum int
+	if t.MinAge != nil {
+		minimum = *t.MinAge
+	} else {
+		minimum = 0
+	}
+	if t.MaxAge != nil {
+		maximum = *t.MaxAge
+	} else {
+		maximum = 0
+	}
+
+	tone, err := tools.GetTone(uint(*t.Tones))
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundToneError(err)
@@ -34,31 +46,43 @@ func (t *FreestyleGeneratorRequest) Generator(user model.User) serializer.Respon
 		return serializer.DBError(err)
 	}
 
-	voice, err := tools.GetVoice(uint(t.BrandVoice), user.Id)
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return serializer.NotFoundVoiceError(err)
+	var voice string
+	if t.BrandVoice != nil || *t.BrandVoice != 0 {
+		v, err := tools.GetVoice(uint(*t.BrandVoice), user.Id)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return serializer.NotFoundVoiceError(err)
+			}
+			return serializer.DBError(err)
 		}
-		return serializer.DBError(err)
+		voice = v.Content
 	}
 
-	region, err := tools.GetRegion(uint(t.Region))
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return serializer.NotFoundRegionError(err)
+	var region string
+	if t.Region != nil || *t.Region != 0 {
+		r, err := tools.GetRegion(uint(*t.Region))
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return serializer.NotFoundRegionError(err)
+			}
+			return serializer.DBError(err)
 		}
-		return serializer.DBError(err)
+		region = r.Country
 	}
 
-	gender, err := tools.GetGender(uint(t.Gender))
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return serializer.NotFoundGenderError(err)
+	var gender string
+	if t.Gender != nil || *t.Gender != 0 {
+		g, err := tools.GetGender(uint(*t.Gender))
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return serializer.NotFoundGenderError(err)
+			}
+			return serializer.DBError(err)
 		}
-		return serializer.DBError(err)
+		gender = g.Value
 	}
 
-	language, err := tools.GetLanguage(uint(t.Language))
+	language, err := tools.GetLanguage(uint(*t.Language))
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundLanguageError(err)
@@ -69,12 +93,12 @@ func (t *FreestyleGeneratorRequest) Generator(user model.User) serializer.Respon
 	ads := model.EmailAds{
 		UserId:     user.Id,
 		Type:       1,
-		Detail:     t.Detail,
-		Region:     uint(t.Region),
-		Gender:     uint(t.Gender),
-		MinAge:     t.MinAge,
-		MaxAge:     t.MaxAge,
-		LanguageId: uint(t.Language),
+		Detail:     *t.Detail,
+		Region:     uint(*t.Region),
+		Gender:     uint(*t.Gender),
+		MinAge:     minimum,
+		MaxAge:     maximum,
+		LanguageId: uint(*t.Language),
 	}
 
 	tx := cache.DB.Begin()
@@ -87,11 +111,11 @@ func (t *FreestyleGeneratorRequest) Generator(user model.User) serializer.Respon
 	request.Client.Body = map[string]any{
 		"text":        t.Detail,
 		"tone":        tone.Value,
-		"brand_voice": voice.Content,
-		"region":      region.Iso,
-		"gender":      gender.Value,
-		"min_age":     t.MinAge,
-		"max_age":     t.MaxAge,
+		"brand_voice": voice,
+		"region":      region,
+		"gender":      gender,
+		"min_age":     minimum,
+		"max_age":     maximum,
 		"lang":        language.Iso,
 	}
 

@@ -13,18 +13,30 @@ import (
 )
 
 type IntroGeneratorRequest struct {
-	Topic      string `form:"topic" json:"topic" binding:"required"`
-	Tones      int    `form:"tones" json:"tones" binding:"required"`
-	BrandVoice int    `form:"brand_voice" json:"brand_voice"`
-	MinAge     int    `form:"min_age" json:"min_age"`
-	MaxAge     int    `form:"max_age" json:"max_age"`
-	Language   int    `form:"language" json:"language" binding:"required"`
+	Topic      *string `form:"topic" json:"topic" binding:"required"`
+	Tones      *int    `form:"tones" json:"tones" binding:"required"`
+	BrandVoice *int    `form:"brand_voice" json:"brand_voice"`
+	MinAge     *int    `form:"min_age" json:"min_age"`
+	MaxAge     *int    `form:"max_age" json:"max_age"`
+	Language   *int    `form:"language" json:"language" binding:"required"`
 }
 
 func (t *IntroGeneratorRequest) Generator(user model.User) serializer.Response {
 	var tools utils.Common
 
-	tone, err := tools.GetTone(uint(t.Tones))
+	var minimum, maximum int
+	if t.MinAge != nil {
+		minimum = *t.MinAge
+	} else {
+		minimum = 0
+	}
+	if t.MaxAge != nil {
+		maximum = *t.MaxAge
+	} else {
+		maximum = 0
+	}
+
+	tone, err := tools.GetTone(uint(*t.Tones))
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundToneError(err)
@@ -32,15 +44,19 @@ func (t *IntroGeneratorRequest) Generator(user model.User) serializer.Response {
 		return serializer.DBError(err)
 	}
 
-	voice, err := tools.GetVoice(uint(t.BrandVoice), user.Id)
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return serializer.NotFoundVoiceError(err)
+	var voice string
+	if t.BrandVoice != nil || *t.BrandVoice != 0 {
+		v, err := tools.GetVoice(uint(*t.BrandVoice), user.Id)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return serializer.NotFoundVoiceError(err)
+			}
+			return serializer.DBError(err)
 		}
-		return serializer.DBError(err)
+		voice = v.Content
 	}
 
-	language, err := tools.GetLanguage(uint(t.Language))
+	language, err := tools.GetLanguage(uint(*t.Language))
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundLanguageError(err)
@@ -51,11 +67,11 @@ func (t *IntroGeneratorRequest) Generator(user model.User) serializer.Response {
 	blog := model.BlogAds{
 		UserId:     user.Id,
 		Type:       1,
-		ToneId:     uint(t.Tones),
-		VoiceId:    uint(t.BrandVoice),
-		MinAge:     t.MinAge,
-		MaxAge:     t.MaxAge,
-		LanguageId: uint(t.Language),
+		ToneId:     uint(*t.Tones),
+		VoiceId:    uint(*t.BrandVoice),
+		MinAge:     minimum,
+		MaxAge:     maximum,
+		LanguageId: uint(*t.Language),
 	}
 
 	tx := cache.DB.Begin()
@@ -68,9 +84,9 @@ func (t *IntroGeneratorRequest) Generator(user model.User) serializer.Response {
 	request.Client.Body = map[string]any{
 		"topic":       t.Topic,
 		"tone":        tone.Value,
-		"brand_voice": voice.Content,
-		"min_age":     t.MinAge,
-		"max_age":     t.MaxAge,
+		"brand_voice": voice,
+		"min_age":     minimum,
+		"max_age":     maximum,
 		"lang":        language.Iso,
 	}
 

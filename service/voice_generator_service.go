@@ -13,15 +13,15 @@ import (
 )
 
 type VoiceGeneratorRequest struct {
-	Text       string `form:"text" json:"text" binding:"required"`
-	BrandVoice int    `form:"brand_voice" json:"brand_voice" binding:"required"`
-	Language   int    `form:"language" json:"language" binding:"required"`
+	Text       *string `form:"text" json:"text" binding:"required"`
+	BrandVoice *int    `form:"brand_voice" json:"brand_voice" binding:"required"`
+	Language   *int    `form:"language" json:"language" binding:"required"`
 }
 
 func (t *VoiceGeneratorRequest) Generator(user model.User) serializer.Response {
 	var tools utils.Common
 
-	voice, err := tools.GetVoice(uint(t.BrandVoice), user.Id)
+	voice, err := tools.GetVoice(uint(*t.BrandVoice), user.Id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundVoiceError(err)
@@ -29,7 +29,7 @@ func (t *VoiceGeneratorRequest) Generator(user model.User) serializer.Response {
 		return serializer.DBError(err)
 	}
 
-	language, err := tools.GetLanguage(uint(t.Language))
+	language, err := tools.GetLanguage(uint(*t.Language))
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundLanguageError(err)
@@ -40,9 +40,9 @@ func (t *VoiceGeneratorRequest) Generator(user model.User) serializer.Response {
 	ads := model.OptimizedAds{
 		UserId:     user.Id,
 		Type:       4,
-		Text:       t.Text,
-		VoiceId:    uint(t.BrandVoice),
-		LanguageId: uint(t.Language),
+		Text:       *t.Text,
+		VoiceId:    uint(*t.BrandVoice),
+		LanguageId: uint(*t.Language),
 	}
 
 	tx := cache.DB.Begin()
@@ -55,7 +55,7 @@ func (t *VoiceGeneratorRequest) Generator(user model.User) serializer.Response {
 	request.Client.Body = map[string]any{
 		"text":        t.Text,
 		"brand_voice": voice.Content,
-		"lang":        language.Iso,
+		"lang":        language.Name,
 	}
 
 	body, err := request.Client.Post(model.Url["generate_optimize_match_brand_voice"])

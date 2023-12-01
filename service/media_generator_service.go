@@ -13,23 +13,35 @@ import (
 )
 
 type MediaGeneratorRequest struct {
-	Platform    int    `form:"platform" json:"platform" binding:"required"`
-	BrandName   string `form:"brand_name" json:"brand_name" binding:"required"`
-	ServiceName string `form:"service_name" json:"service_name" binding:"required"`
-	ServiceDesc string `form:"service_desc" json:"service_desc" binding:"required"`
-	Tones       int    `form:"tones" json:"tones" binding:"required"`
-	BrandVoice  int    `form:"brand_voice" json:"brand_voice"`
-	Region      int    `form:"region" json:"region"`
-	Gender      int    `form:"gender" json:"gender"`
-	MinAge      int    `form:"min_age" json:"min_age"`
-	MaxAge      int    `form:"max_age" json:"max_age"`
-	Language    int    `form:"language" json:"language"`
+	Platform    *int    `form:"platform" json:"platform" binding:"required"`
+	BrandName   *string `form:"brand_name" json:"brand_name" binding:"required"`
+	ServiceName *string `form:"service_name" json:"service_name" binding:"required"`
+	ServiceDesc *string `form:"service_desc" json:"service_desc" binding:"required"`
+	Tones       *int    `form:"tones" json:"tones" binding:"required"`
+	BrandVoice  *int    `form:"brand_voice" json:"brand_voice"`
+	Region      *int    `form:"region" json:"region"`
+	Gender      *int    `form:"gender" json:"gender"`
+	MinAge      *int    `form:"min_age" json:"min_age"`
+	MaxAge      *int    `form:"max_age" json:"max_age"`
+	Language    *int    `form:"language" json:"language" binding:"required"`
 }
 
 func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 	var tools utils.Common
 
-	platform, err := tools.GetPlatform(uint(m.Platform))
+	var minimum, maximum int
+	if m.MinAge != nil {
+		minimum = *m.MinAge
+	} else {
+		minimum = 0
+	}
+	if m.MaxAge != nil {
+		maximum = *m.MaxAge
+	} else {
+		maximum = 0
+	}
+
+	platform, err := tools.GetPlatform(uint(*m.Platform))
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundPlatformError(err)
@@ -37,7 +49,7 @@ func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 		return serializer.DBError(err)
 	}
 
-	tone, err := tools.GetTone(uint(m.Tones))
+	tone, err := tools.GetTone(uint(*m.Tones))
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundToneError(err)
@@ -45,31 +57,43 @@ func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 		return serializer.DBError(err)
 	}
 
-	voice, err := tools.GetVoice(uint(m.BrandVoice), user.Id)
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return serializer.NotFoundVoiceError(err)
+	var brandVoice string
+	if m.BrandVoice != nil || *m.BrandVoice != 0 {
+		voice, err := tools.GetVoice(uint(*m.BrandVoice), user.Id)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return serializer.NotFoundVoiceError(err)
+			}
+			return serializer.DBError(err)
 		}
-		return serializer.DBError(err)
+		brandVoice = voice.Content
 	}
 
-	region, err := tools.GetRegion(uint(m.Region))
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return serializer.NotFoundRegionError(err)
+	var region string
+	if m.Region != nil || *m.Region != 0 {
+		r, err := tools.GetRegion(uint(*m.Region))
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return serializer.NotFoundRegionError(err)
+			}
+			return serializer.DBError(err)
 		}
-		return serializer.DBError(err)
+		region = r.Country
 	}
 
-	gender, err := tools.GetGender(uint(m.Gender))
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return serializer.NotFoundRegionError(err)
+	var gender string
+	if m.Gender != nil || *m.Gender != 0 {
+		g, err := tools.GetGender(uint(*m.Gender))
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return serializer.NotFoundRegionError(err)
+			}
+			return serializer.DBError(err)
 		}
-		return serializer.DBError(err)
+		gender = g.Value
 	}
 
-	language, err := tools.GetLanguage(uint(m.Language))
+	language, err := tools.GetLanguage(uint(*m.Language))
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundLanguageError(err)
@@ -79,17 +103,17 @@ func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 
 	media := model.MediaAds{
 		UserId:      user.Id,
-		PlatformId:  uint(m.Platform),
-		BrandName:   m.BrandName,
-		ServiceName: m.ServiceName,
-		Description: m.ServiceDesc,
-		ToneId:      uint(m.Tones),
-		VoiceId:     uint(m.BrandVoice),
-		Region:      uint(m.Region),
-		Gender:      uint(m.Gender),
-		MinAge:      m.MinAge,
-		MaxAge:      m.MaxAge,
-		LanguageId:  uint(m.Language),
+		PlatformId:  uint(*m.Platform),
+		BrandName:   *m.BrandName,
+		ServiceName: *m.ServiceName,
+		Description: *m.ServiceDesc,
+		ToneId:      uint(*m.Tones),
+		VoiceId:     uint(*m.BrandVoice),
+		Region:      uint(*m.Region),
+		Gender:      uint(*m.Gender),
+		MinAge:      minimum,
+		MaxAge:      maximum,
+		LanguageId:  uint(*m.Language),
 	}
 
 	tx := cache.DB.Begin()
@@ -105,11 +129,11 @@ func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 		"product_name":        m.ServiceName,
 		"product_description": m.ServiceDesc,
 		"tone":                tone.Value,
-		"brand_voice":         voice.Content,
-		"region":              region.Iso,
-		"gender":              gender.Value,
-		"min_age":             m.MinAge,
-		"max_age":             m.MaxAge,
+		"brand_voice":         brandVoice,
+		"region":              region,
+		"gender":              gender,
+		"min_age":             minimum,
+		"max_age":             maximum,
 		"lang":                language.Iso,
 	}
 

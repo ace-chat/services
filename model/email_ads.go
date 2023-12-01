@@ -18,6 +18,7 @@ type EmailAds struct {
 	MaxAge      int            `gorm:"column:max_age;type:int(40);comment:max age" json:"max_age"`
 	BrandName   string         `gorm:"column:brand_name;type:varchar(120);comment:brand name" json:"brand_name"`
 	ServiceName string         `gorm:"column:service_name;type:varchar(120);comment:service name" json:"service_name"`
+	ServiceDesc string         `gorm:"column:service_desc;type:varchar(120);comment:service desc" json:"service_desc"`
 	BrandDesc   string         `gorm:"column:brand_desc;type:varchar(200);comment:brand desc" json:"brand_desc"`
 	LanguageId  uint           `gorm:"column:language_id;type:int(255);comment:language id" json:"language_id"`
 	CreatedAt   time.Time      `gorm:"column:created_at" json:"created_at"`

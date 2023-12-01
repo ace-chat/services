@@ -13,15 +13,15 @@ import (
 )
 
 type SummarizeGeneratorRequest struct {
-	Text      string `form:"text" json:"text" binding:"required"`
-	WordCount int    `form:"word_count" json:"word_count" binding:"required"`
-	Language  int    `form:"language" json:"language" binding:"required"`
+	Text      *string `form:"text" json:"text" binding:"required"`
+	WordCount *int    `form:"word_count" json:"word_count" binding:"required"`
+	Language  *int    `form:"language" json:"language" binding:"required"`
 }
 
 func (t *SummarizeGeneratorRequest) Generator(user model.User) serializer.Response {
 	var tools utils.Common
 
-	language, err := tools.GetLanguage(uint(t.Language))
+	language, err := tools.GetLanguage(uint(*t.Language))
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundLanguageError(err)
@@ -32,9 +32,9 @@ func (t *SummarizeGeneratorRequest) Generator(user model.User) serializer.Respon
 	ads := model.OptimizedAds{
 		UserId:     user.Id,
 		Type:       2,
-		Text:       t.Text,
-		WordCount:  t.WordCount,
-		LanguageId: uint(t.Language),
+		Text:       *t.Text,
+		WordCount:  *t.WordCount,
+		LanguageId: uint(*t.Language),
 	}
 
 	tx := cache.DB.Begin()
@@ -47,7 +47,7 @@ func (t *SummarizeGeneratorRequest) Generator(user model.User) serializer.Respon
 	request.Client.Body = map[string]any{
 		"text":       t.Text,
 		"word_count": t.WordCount,
-		"lang":       language.Iso,
+		"lang":       language.Name,
 	}
 	body, err := request.Client.Post(model.Url["generate_optimize_summarize"])
 	if err != nil {

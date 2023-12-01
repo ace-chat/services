@@ -13,15 +13,15 @@ import (
 )
 
 type ToneGeneratorRequest struct {
-	Text     string `form:"text" json:"text" binding:"required"`
-	Tones    int    `form:"tones" json:"tones" binding:"required"`
-	Language int    `form:"language" json:"language" binding:"required"`
+	Text     *string `form:"text" json:"text" binding:"required"`
+	Tones    *int    `form:"tones" json:"tones" binding:"required"`
+	Language *int    `form:"language" json:"language" binding:"required"`
 }
 
 func (t *ToneGeneratorRequest) Generator(user model.User) serializer.Response {
 	var tools utils.Common
 
-	tone, err := tools.GetTone(uint(t.Tones))
+	tone, err := tools.GetTone(uint(*t.Tones))
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundToneError(err)
@@ -29,7 +29,7 @@ func (t *ToneGeneratorRequest) Generator(user model.User) serializer.Response {
 		return serializer.DBError(err)
 	}
 
-	language, err := tools.GetLanguage(uint(t.Language))
+	language, err := tools.GetLanguage(uint(*t.Language))
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundLanguageError(err)
@@ -40,9 +40,9 @@ func (t *ToneGeneratorRequest) Generator(user model.User) serializer.Response {
 	ads := model.OptimizedAds{
 		UserId:     user.Id,
 		Type:       1,
-		Text:       t.Text,
-		ToneId:     uint(t.Tones),
-		LanguageId: uint(t.Language),
+		Text:       *t.Text,
+		ToneId:     uint(*t.Tones),
+		LanguageId: uint(*t.Language),
 	}
 
 	tx := cache.DB.Begin()
@@ -55,7 +55,7 @@ func (t *ToneGeneratorRequest) Generator(user model.User) serializer.Response {
 	request.Client.Body = map[string]any{
 		"text": t.Text,
 		"tone": tone.Value,
-		"lang": language.Iso,
+		"lang": language.Name,
 	}
 
 	body, err := request.Client.Post(model.Url["generate_optimize_change_tone"])

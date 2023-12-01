@@ -11,6 +11,7 @@ type BlogAds struct {
 	Type         int            `gorm:"column:type;type:int(10);comment:blog type: 1 intro, 2 outline, 3 entire" json:"type"`
 	Topic        string         `gorm:"column:topic;type:varchar(200);comment:topic" json:"topic"`
 	ToneId       uint           `gorm:"column:tone_id;type:int(255);comment:tone id" json:"tone_id"`
+	BlogType     uint           `gorm:"column:blog_type;type:int(255);comment:blog type" json:"blog_type"`
 	VoiceId      uint           `gorm:"column:voice_id;type:int(255);comment:voice id" json:"voice_id"`
 	Keyword      string         `gorm:"column:keyword;type:varchar(200);comment:keyword" json:"keyword"`
 	MinAge       int            `gorm:"column:min_age;type:int(20);comment:min age" json:"min_age"`

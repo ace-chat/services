@@ -13,14 +13,14 @@ import (
 )
 
 type ParaphraseGeneratorRequest struct {
-	Text     string `form:"text" json:"text" binding:"required"`
-	Language int    `form:"language" json:"language" binding:"required"`
+	Text     *string `form:"text" json:"text" binding:"required"`
+	Language *int    `form:"language" json:"language" binding:"required"`
 }
 
 func (t *ParaphraseGeneratorRequest) Generator(user model.User) serializer.Response {
 	var tools utils.Common
 
-	language, err := tools.GetLanguage(uint(t.Language))
+	language, err := tools.GetLanguage(uint(*t.Language))
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundLanguageError(err)
@@ -31,8 +31,8 @@ func (t *ParaphraseGeneratorRequest) Generator(user model.User) serializer.Respo
 	ads := model.OptimizedAds{
 		UserId:     user.Id,
 		Type:       3,
-		Text:       t.Text,
-		LanguageId: uint(t.Language),
+		Text:       *t.Text,
+		LanguageId: uint(*t.Language),
 	}
 
 	tx := cache.DB.Begin()
@@ -44,7 +44,7 @@ func (t *ParaphraseGeneratorRequest) Generator(user model.User) serializer.Respo
 
 	request.Client.Body = map[string]any{
 		"text": t.Text,
-		"lang": language.Iso,
+		"lang": language.Name,
 	}
 
 	body, err := request.Client.Post(model.Url["generate_optimize_paraphrase"])
