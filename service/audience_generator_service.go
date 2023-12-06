@@ -37,23 +37,33 @@ func (t *AudienceGeneratorRequest) Generator(user model.User) serializer.Respons
 	}
 
 	var region string
-	if t.Region != nil || *t.Region != 0 {
+	var regionId uint
+	if t.Region != nil {
 		r, err := tools.GetRegion(uint(*t.Region))
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundRegionError(err)
 			}
+			zap.L().Error("[Audience] Get region failure", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		region = r.Country
+		regionId = r.Id
 	}
 
-	gender, err := tools.GetGender(uint(*t.Gender))
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return serializer.NotFoundGenderError(err)
+	var gender string
+	var genderId uint
+	if t.Gender != nil {
+		g, err := tools.GetGender(uint(*t.Gender))
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return serializer.NotFoundGenderError(err)
+			}
+			zap.L().Error("[Audience] Get gender failure", zap.Error(err))
+			return serializer.DBError(err)
 		}
-		return serializer.DBError(err)
+		gender = g.Value
+		genderId = g.Id
 	}
 
 	language, err := tools.GetLanguage(uint(*t.Language))
@@ -68,8 +78,8 @@ func (t *AudienceGeneratorRequest) Generator(user model.User) serializer.Respons
 		UserId:     user.Id,
 		Type:       5,
 		Text:       *t.Text,
-		Region:     uint(*t.Region),
-		Gender:     uint(*t.Gender),
+		Region:     regionId,
+		Gender:     genderId,
 		MinAge:     minimum,
 		MaxAge:     maximum,
 		LanguageId: uint(*t.Language),
@@ -85,7 +95,7 @@ func (t *AudienceGeneratorRequest) Generator(user model.User) serializer.Respons
 	request.Client.Body = map[string]any{
 		"text":    t.Text,
 		"region":  region,
-		"gender":  gender.Value,
+		"gender":  gender,
 		"min_age": minimum,
 		"max_age": maximum,
 		"lang":    language.Iso,

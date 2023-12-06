@@ -63,43 +63,53 @@ func (t *WelcomeGeneratorRequest) Generator(user model.User) serializer.Response
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundToneError(err)
 		}
+		zap.L().Error("[Welcome] Get tone failure", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
 	var voice string
-	if t.BrandVoice != nil || *t.BrandVoice != 0 {
+	var voiceId uint
+	if t.BrandVoice != nil {
 		v, err := tools.GetVoice(uint(*t.BrandVoice), user.Id)
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundVoiceError(err)
 			}
+			zap.L().Error("[Welcome] Get brand voice failure", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		voice = v.Content
+		voiceId = v.Id
 	}
 
 	var region string
-	if t.Region != nil || *t.Region != 0 {
+	var regionId uint
+	if t.Region != nil {
 		r, err := tools.GetRegion(uint(*t.Region))
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundRegionError(err)
 			}
+			zap.L().Error("[Welcome] Get region failure", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		region = r.Country
+		regionId = r.Id
 	}
 
 	var gender string
-	if t.Gender != nil || *t.Gender != 0 {
+	var genderId uint
+	if t.Gender != nil {
 		g, err := tools.GetGender(uint(*t.Gender))
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundGenderError(err)
 			}
+			zap.L().Error("[Welcome] Get gender failure", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		gender = g.Value
+		genderId = g.Id
 	}
 
 	language, err := tools.GetLanguage(uint(*t.Language))
@@ -107,6 +117,7 @@ func (t *WelcomeGeneratorRequest) Generator(user model.User) serializer.Response
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundLanguageError(err)
 		}
+		zap.L().Error("[Welcome] Get language failure", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -118,9 +129,9 @@ func (t *WelcomeGeneratorRequest) Generator(user model.User) serializer.Response
 		ServiceDesc: serviceDesc,
 		BrandDesc:   brandDesc,
 		ToneId:      uint(*t.Tones),
-		VoiceId:     uint(*t.BrandVoice),
-		Region:      uint(*t.Region),
-		Gender:      uint(*t.Gender),
+		VoiceId:     voiceId,
+		Region:      regionId,
+		Gender:      genderId,
 		MinAge:      minimum,
 		MaxAge:      maximum,
 		LanguageId:  uint(*t.Language),

@@ -41,19 +41,23 @@ func (t *OutlineGeneratorRequest) Generator(user model.User) serializer.Response
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundToneError(err)
 		}
+		zap.L().Error("[Outline] Get tone failure", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
 	var voice string
-	if t.BrandVoice != nil || *t.BrandVoice != 0 {
+	var voiceId uint
+	if t.BrandVoice != nil {
 		v, err := tools.GetVoice(uint(*t.BrandVoice), user.Id)
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundVoiceError(err)
 			}
+			zap.L().Error("[Outline] Get brand voice failure", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		voice = v.Content
+		voiceId = v.Id
 	}
 
 	language, err := tools.GetLanguage(uint(*t.Language))
@@ -61,6 +65,7 @@ func (t *OutlineGeneratorRequest) Generator(user model.User) serializer.Response
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundLanguageError(err)
 		}
+		zap.L().Error("[Outline] Get language failure", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -68,7 +73,7 @@ func (t *OutlineGeneratorRequest) Generator(user model.User) serializer.Response
 		UserId:     user.Id,
 		Type:       2,
 		ToneId:     uint(*t.Tones),
-		VoiceId:    uint(*t.BrandVoice),
+		VoiceId:    voiceId,
 		MinAge:     minimum,
 		MaxAge:     maximum,
 		LanguageId: uint(*t.Language),
