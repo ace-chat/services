@@ -137,16 +137,16 @@ func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 
 	request.Client.Body = map[string]any{
 		"platform":            platform.Value,
-		"brand_name":          m.BrandName,
-		"product_name":        m.ServiceName,
-		"product_description": m.ServiceDesc,
+		"brand_name":          *m.BrandName,
+		"product_name":        *m.ServiceName,
+		"product_description": *m.ServiceDesc,
 		"tone":                tone.Value,
 		"brand_voice":         brandVoice,
 		"region":              region,
 		"gender":              gender,
 		"min_age":             minimum,
 		"max_age":             maximum,
-		"lang":                language.Iso,
+		"lang":                language.Name,
 	}
 
 	body, err := request.Client.Post(model.Url["generator_social_media"])

@@ -53,7 +53,7 @@ func (t *VoiceGeneratorRequest) Generator(user model.User) serializer.Response {
 	}
 
 	request.Client.Body = map[string]any{
-		"text":        t.Text,
+		"text":        *t.Text,
 		"brand_voice": voice.Content,
 		"lang":        language.Name,
 	}

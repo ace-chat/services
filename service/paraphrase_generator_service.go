@@ -43,7 +43,7 @@ func (t *ParaphraseGeneratorRequest) Generator(user model.User) serializer.Respo
 	}
 
 	request.Client.Body = map[string]any{
-		"text": t.Text,
+		"text": *t.Text,
 		"lang": language.Name,
 	}
 

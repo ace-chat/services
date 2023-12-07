@@ -87,7 +87,7 @@ func (t *OutlineGeneratorRequest) Generator(user model.User) serializer.Response
 	}
 
 	request.Client.Body = map[string]any{
-		"topic":       t.Topic,
+		"topic":       *t.Topic,
 		"tone":        tone.Value,
 		"brand_voice": voice,
 		"min_age":     minimum,

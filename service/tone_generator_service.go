@@ -53,7 +53,7 @@ func (t *ToneGeneratorRequest) Generator(user model.User) serializer.Response {
 	}
 
 	request.Client.Body = map[string]any{
-		"text": t.Text,
+		"text": *t.Text,
 		"tone": tone.Value,
 		"lang": language.Name,
 	}

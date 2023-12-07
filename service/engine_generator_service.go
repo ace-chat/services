@@ -137,9 +137,9 @@ func (e *EngineGeneratorRequest) Generator(user model.User) serializer.Response 
 
 	request.Client.Body = map[string]any{
 		"platform":            platform.Value,
-		"brand_name":          e.BrandName,
-		"product_name":        e.ServiceName,
-		"product_description": e.ServiceDesc,
+		"brand_name":          *e.BrandName,
+		"product_name":        *e.ServiceName,
+		"product_description": *e.ServiceDesc,
 		"tone":                tone.Value,
 		"brand_voice":         brandVoice,
 		"region":              region,

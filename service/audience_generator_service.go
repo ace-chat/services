@@ -93,7 +93,7 @@ func (t *AudienceGeneratorRequest) Generator(user model.User) serializer.Respons
 	}
 
 	request.Client.Body = map[string]any{
-		"text":    t.Text,
+		"text":    *t.Text,
 		"region":  region,
 		"gender":  gender,
 		"min_age": minimum,

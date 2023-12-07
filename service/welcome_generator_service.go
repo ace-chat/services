@@ -145,7 +145,7 @@ func (t *WelcomeGeneratorRequest) Generator(user model.User) serializer.Response
 	}
 
 	request.Client.Body = map[string]any{
-		"brand_name":          t.BrandName,
+		"brand_name":          *t.BrandName,
 		"brand_description":   brandDesc,
 		"product_name":        serviceName,
 		"product_description": serviceDesc,

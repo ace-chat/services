@@ -118,13 +118,13 @@ func (t *EntireGeneratorRequest) Generator(user model.User) serializer.Response 
 	}
 
 	request.Client.Body = map[string]any{
-		"topic":         t.Topic,
+		"topic":         *t.Topic,
 		"tone":          tone.Value,
 		"brand_voice":   voice,
 		"keywords":      keyword,
 		"min_age":       minimum,
 		"max_age":       maximum,
-		"word_count":    t.WordCount,
+		"word_count":    *t.WordCount,
 		"other_details": detail,
 		"lang":          language.Name,
 		"type":          ty.Value,

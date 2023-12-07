@@ -145,7 +145,7 @@ func (t *MarketingGeneratorRequest) Generator(user model.User) serializer.Respon
 	}
 
 	request.Client.Body = map[string]any{
-		"brand_name":          t.BrandName,
+		"brand_name":          *t.BrandName,
 		"brand_description":   brandDesc,
 		"product_name":        serviceName,
 		"product_description": serviceDesc,

@@ -120,7 +120,7 @@ func (t *FreestyleGeneratorRequest) Generator(user model.User) serializer.Respon
 	}
 
 	request.Client.Body = map[string]any{
-		"text":        t.Detail,
+		"text":        *t.Detail,
 		"tone":        tone.Value,
 		"brand_voice": voice,
 		"region":      region,

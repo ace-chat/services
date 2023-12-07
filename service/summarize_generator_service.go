@@ -45,8 +45,8 @@ func (t *SummarizeGeneratorRequest) Generator(user model.User) serializer.Respon
 	}
 
 	request.Client.Body = map[string]any{
-		"text":       t.Text,
-		"word_count": t.WordCount,
+		"text":       *t.Text,
+		"word_count": *t.WordCount,
 		"lang":       language.Name,
 	}
 	body, err := request.Client.Post(model.Url["generate_optimize_summarize"])
