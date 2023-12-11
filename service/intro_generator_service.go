@@ -95,7 +95,7 @@ func (t *IntroGeneratorRequest) Generator(user model.User) serializer.Response {
 		"lang":        language.Iso,
 	}
 
-	body, err := request.Client.Post(model.Url["generate_blog_intro"])
+	body, err := request.Client.Post(model.Url["generate_blog_intro"], false)
 	if err != nil {
 		return serializer.GeneratorError(err)
 	}

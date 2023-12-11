@@ -158,7 +158,7 @@ func (t *AdvantageGeneratorRequest) Generator(user model.User) serializer.Respon
 		"lang":                language.Iso,
 	}
 
-	body, err := request.Client.Post(model.Url["generate_advantages/benefits_email_content"])
+	body, err := request.Client.Post(model.Url["generate_advantages/benefits_email_content"], false)
 	if err != nil {
 		return serializer.GeneratorError(err)
 	}

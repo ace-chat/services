@@ -17,7 +17,10 @@ mysql:
     password: "Chenhan0804"
     db: "ace"
 request:
-    url: "http://178.128.96.65:9005"
+    contentGeneration: "http://178.128.96.65:9005"
+    analytics: "http://178.128.96.65:9008"
 logger:
     level: ""
+    path: ""
+upload:
     path: ""

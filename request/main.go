@@ -2,25 +2,30 @@ package request
 
 import (
 	"ace/model"
+	"ace/pkg"
+	"bytes"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 )
 
 type HttpClient struct {
-	Url    string
-	Header map[string]string
-	Params map[string]string
-	Body   map[string]any
+	ContentGeneration string
+	Analytics         string
+	Header            map[string]string
+	Params            map[string]string
+	Body              map[string]any
 }
 
 var Client HttpClient
 
 func (c *HttpClient) Get(uri string) ([]byte, error) {
 	params := url.Values{}
-	u, err := url.Parse(c.Url + uri)
+	u, err := url.Parse(c.ContentGeneration + uri)
 	if err != nil {
 		return nil, err
 	}
@@ -54,27 +59,58 @@ func (c *HttpClient) Get(uri string) ([]byte, error) {
 	return body, nil
 }
 
-func (c *HttpClient) Post(uri string) ([]byte, error) {
-	da := make([]string, 0)
-	for s, s2 := range c.Body {
-		da = append(da, fmt.Sprintf("%v=%v", s, s2))
-	}
-	payload := strings.Join(da, "&")
+func (c *HttpClient) Post(str string, t bool) ([]byte, error) {
+	var request *http.Request
+	if t {
+		f := fmt.Sprintf("%v/%v", pkg.Upload.Path, str)
+		file, err := os.Open(f)
+		if err != nil {
+			return nil, err
+		}
+		defer file.Close()
+		body := &bytes.Buffer{}
+		writer := multipart.NewWriter(body)
+		part, err := writer.CreateFormFile("file", str)
+		if err != nil {
+			return nil, err
+		}
+		_, err = io.Copy(part, file)
+		if err != nil {
+			return nil, err
+		}
+		err = writer.Close()
+		if err != nil {
+			return nil, err
+		}
+		u, err := url.Parse(fmt.Sprintf("%v%v", c.Analytics, "/upload"))
+		if err != nil {
+			return nil, err
+		}
+		request, err = http.NewRequest("POST", u.String(), body)
+		request.Header.Set("Content-Type", writer.FormDataContentType())
+	} else {
+		values := url.Values{}
+		for s, s2 := range c.Body {
+			values.Add(s, fmt.Sprintf("%v", s2))
+		}
+		payload := values.Encode()
+		u, err := url.Parse(c.ContentGeneration + str)
+		if err != nil {
+			return nil, err
+		}
 
-	u, err := url.Parse(c.Url + uri)
-	if err != nil {
-		return nil, err
-	}
+		if _, ok := c.Header["Content-Type"]; !ok {
+			c.Header["Content-Type"] = "application/x-www-form-urlencoded"
+		}
 
-	c.Header["Content-Type"] = "application/x-www-form-urlencoded"
+		request, err = http.NewRequest("POST", u.String(), strings.NewReader(payload))
+		if err != nil {
+			return nil, err
+		}
 
-	request, err := http.NewRequest("POST", u.String(), strings.NewReader(payload))
-	if err != nil {
-		return nil, err
-	}
-
-	for s, a := range c.Header {
-		request.Header.Set(s, a)
+		for s, a := range c.Header {
+			request.Header.Set(s, a)
+		}
 	}
 
 	response, err := http.DefaultClient.Do(request)
@@ -101,7 +137,8 @@ func (c *HttpClient) Reset() {
 func Setup(r model.Request) {
 	header := make(map[string]string)
 	Client = HttpClient{
-		Url:    r.Url,
-		Header: header,
+		ContentGeneration: r.ContentGeneration,
+		Analytics:         r.Analytics,
+		Header:            header,
 	}
 }

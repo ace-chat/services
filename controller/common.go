@@ -99,3 +99,13 @@ func CommonTypes(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, serializer.ParamError(err))
 	}
 }
+
+func CommonUpdate(c *gin.Context) {
+	var request service.Upload
+	if err := c.Bind(&request); err == nil {
+		res := request.Store(c)
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, serializer.ParamError(err))
+	}
+}

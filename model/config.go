@@ -11,6 +11,7 @@ type Config struct {
 	Mysql   Mysql   `yaml:"mysql" json:"mysql"`
 	Request Request `yaml:"request" json:"request"`
 	Logger  Logger  `yaml:"logger" json:"logger"`
+	Upload  Upload  `yaml:"upload" json:"upload"`
 }
 
 type Redis struct {
@@ -30,10 +31,15 @@ type Mysql struct {
 }
 
 type Request struct {
-	Url string `yaml:"url" json:"url"`
+	ContentGeneration string `yaml:"contentGeneration" json:"contentGeneration"`
+	Analytics         string `yaml:"analytics" json:"analytics"`
 }
 
 type Logger struct {
 	Path  string `yaml:"path" json:"path"`
 	Level string `yaml:"level" json:"level"`
+}
+
+type Upload struct {
+	Path string `yaml:"path" json:"path"`
 }

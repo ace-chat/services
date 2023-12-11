@@ -49,7 +49,7 @@ func (t *SummarizeGeneratorRequest) Generator(user model.User) serializer.Respon
 		"word_count": *t.WordCount,
 		"lang":       language.Name,
 	}
-	body, err := request.Client.Post(model.Url["generate_optimize_summarize"])
+	body, err := request.Client.Post(model.Url["generate_optimize_summarize"], false)
 	if err != nil {
 		return serializer.GeneratorError(err)
 	}

@@ -158,7 +158,7 @@ func (t *MarketingGeneratorRequest) Generator(user model.User) serializer.Respon
 		"lang":                language.Name,
 	}
 
-	body, err := request.Client.Post(model.Url["generate_cold_marketing_email_content"])
+	body, err := request.Client.Post(model.Url["generate_cold_marketing_email_content"], false)
 	if err != nil {
 		return serializer.GeneratorError(err)
 	}

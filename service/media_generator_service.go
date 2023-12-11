@@ -149,7 +149,7 @@ func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 		"lang":                language.Name,
 	}
 
-	body, err := request.Client.Post(model.Url["generator_social_media"])
+	body, err := request.Client.Post(model.Url["generator_social_media"], false)
 	if err != nil {
 		return serializer.GeneratorError(err)
 	}

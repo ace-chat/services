@@ -22,6 +22,7 @@ const (
 	CodeTokenError                 = 20010
 	CodeGeneratorError             = 20011
 	CodeNotFoundGeneratorItemError = 20012
+	CodeStoreFileError             = 20013
 )
 
 func NeedLogin(c *gin.Context) {
@@ -115,4 +116,9 @@ func NotFoundGenderError(err error) Response {
 func NotFoundTypeError(err error) Response {
 	msg := "type invalid, please make sure you select the correct type"
 	return Err(CodeNotFoundGeneratorItemError, msg, err)
+}
+
+func StoreFileError(err error) Response {
+	msg := "Failed to operate file"
+	return Err(CodeStoreFileError, msg, err)
 }

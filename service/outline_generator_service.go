@@ -95,7 +95,7 @@ func (t *OutlineGeneratorRequest) Generator(user model.User) serializer.Response
 		"lang":        language.Iso,
 	}
 
-	body, err := request.Client.Post(model.Url["generate_blog_outline"])
+	body, err := request.Client.Post(model.Url["generate_blog_outline"], false)
 	if err != nil {
 		return serializer.GeneratorError(err)
 	}

@@ -34,6 +34,7 @@ func NewServer(mode string) *gin.Engine {
 			common.GET("/languages", controller.CommonLanguages)
 			common.GET("/genders", controller.CommonGender)
 			common.GET("/types", controller.CommonTypes)
+			common.POST("/upload", controller.CommonUpdate)
 		}
 
 		content := api.Group("/content")
@@ -144,6 +145,14 @@ func NewServer(mode string) *gin.Engine {
 					entire.GET("/histories", controller.EntireHistory)
 					entire.GET("/getHistoryById", controller.EntireHistoryById)
 				}
+			}
+		}
+
+		analytics := api.Group("/analytics")
+		{
+			simple := analytics.Group("/simple")
+			{
+				simple.POST("/generator", controller.GeneratorSimpleAnalytics)
 			}
 		}
 	}

@@ -4,6 +4,7 @@ import (
 	"ace/cache"
 	"ace/conf"
 	"ace/logger"
+	"ace/pkg"
 	"ace/request"
 	"ace/server"
 	"flag"
@@ -23,6 +24,8 @@ func main() {
 
 	cache.InitRedis(config.Redis)
 	cache.InitMysql(config.Mysql)
+
+	pkg.Init(config.Upload)
 
 	r := server.NewServer(config.Mode)
 

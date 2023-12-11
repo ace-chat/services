@@ -158,7 +158,7 @@ func (t *WelcomeGeneratorRequest) Generator(user model.User) serializer.Response
 		"lang":                language.Iso,
 	}
 
-	body, err := request.Client.Post(model.Url["generate_welcome_email_content"])
+	body, err := request.Client.Post(model.Url["generate_welcome_email_content"], false)
 	if err != nil {
 		return serializer.GeneratorError(err)
 	}
