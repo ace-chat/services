@@ -114,10 +114,10 @@ func (c *HttpClient) Post(str string, t bool) ([]byte, error) {
 	}
 
 	response, err := http.DefaultClient.Do(request)
-	defer response.Body.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer response.Body.Close()
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {

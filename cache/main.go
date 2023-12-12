@@ -28,6 +28,7 @@ func migration() {
 		&model.Platform{},
 		&model.Language{},
 		&model.Type{},
+		&model.Analytics{},
 	)
 
 	if err != nil {

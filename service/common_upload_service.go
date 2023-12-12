@@ -11,11 +11,11 @@ import (
 )
 
 type Upload struct {
-	File *multipart.FileHeader `json:"file"`
+	File *multipart.FileHeader `form:"file" json:"file" binding:"required"`
 }
 
 func (u *Upload) Store(c *gin.Context) serializer.Response {
-	filename := fmt.Sprintf("file-%v-%v", time.Now().Second(), u.File.Filename)
+	filename := fmt.Sprintf("file-%v-%v", time.Now().Unix(), u.File.Filename)
 	err := c.SaveUploadedFile(u.File, fmt.Sprintf("%v/%v", pkg.Upload.Path, filename))
 	if err != nil {
 		zap.L().Error("[Upload] Store file failure", zap.Error(err))
@@ -23,6 +23,6 @@ func (u *Upload) Store(c *gin.Context) serializer.Response {
 	}
 	return serializer.Response{
 		Code: 200,
-		Data: true,
+		Data: filename,
 	}
 }
