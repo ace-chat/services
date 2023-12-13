@@ -67,3 +67,11 @@ func (*Common) GetType(id uint) (*model.Type, error) {
 
 	return &t, nil
 }
+
+func (*Common) GetService(id uint) (*model.Service, error) {
+	var s model.Service
+	if err := cache.DB.Model(&model.Service{}).Where("id = ?", id).First(&s).Error; err != nil {
+		return nil, err
+	}
+	return &s, nil
+}

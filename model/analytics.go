@@ -9,6 +9,7 @@ type Analytics struct {
 	Id           uint           `gorm:"primaryKey;column:id;type:int(255);comment:id" json:"id"`
 	UserId       uint           `gorm:"column:user_id;type:int(255);comment:user id" json:"user_id"`
 	Type         int            `gorm:"column:type;type:int(10);comment:analytics type(1simple,2deep)" json:"type"`
+	Title        string         `gorm:"column:title;type:varchar(120);comment:analytics title" json:"title"`
 	BusinessDesc string         `gorm:"column:business_desc;comment:business description" json:"business_desc"`
 	ProductDesc  string         `gorm:"column:product_desc;comment:product description" json:"product_desc"`
 	DataDesc     string         `gorm:"column:data_desc;comment:data description" json:"data_desc"`

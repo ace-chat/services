@@ -100,6 +100,17 @@ func CommonTypes(c *gin.Context) {
 	}
 }
 
+func CommonService(c *gin.Context) {
+	var request service.ServicesRequest
+	if err := c.Bind(&request); err == nil {
+		res := request.GetServices()
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, serializer.ParamError(err))
+	}
+
+}
+
 func CommonUpdate(c *gin.Context) {
 	var request service.Upload
 	if err := c.Bind(&request); err == nil {

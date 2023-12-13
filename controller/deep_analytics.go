@@ -8,8 +8,8 @@ import (
 	"net/http"
 )
 
-func GeneratorSimpleAnalytics(c *gin.Context) {
-	var request service.SimpleAnalytics
+func GeneratorDeepAnalytics(c *gin.Context) {
+	var request service.DeepAnalytics
 	if err := c.Bind(&request); err == nil {
 		user, ok := c.Get("user")
 		if !ok {
@@ -24,8 +24,8 @@ func GeneratorSimpleAnalytics(c *gin.Context) {
 	}
 }
 
-func SimpleAnalyticsHistory(c *gin.Context) {
-	var request service.SimpleAnalyticsHistoryRequest
+func DeepAnalyticsHistory(c *gin.Context) {
+	var request service.DeepAnalyticsHistoryRequest
 	if err := c.Bind(&request); err == nil {
 		user, ok := c.Get("user")
 		if !ok {
@@ -40,8 +40,8 @@ func SimpleAnalyticsHistory(c *gin.Context) {
 	}
 }
 
-func SimpleAnalyticsById(c *gin.Context) {
-	var request service.SimpleAnalyticsByIdRequest
+func DeepAnalyticsById(c *gin.Context) {
+	var request service.DeepAnalyticsByIdRequest
 	if err := c.Bind(&request); err == nil {
 		user, ok := c.Get("user")
 		if !ok {

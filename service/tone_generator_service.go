@@ -60,6 +60,7 @@ func (t *ToneGeneratorRequest) Generator(user model.User) serializer.Response {
 
 	body, err := request.Client.Post(model.Url["generate_optimize_change_tone"], false)
 	if err != nil {
+		tx.Rollback()
 		return serializer.GeneratorError(err)
 	}
 

@@ -34,6 +34,7 @@ func NewServer(mode string) *gin.Engine {
 			common.GET("/languages", controller.CommonLanguages)
 			common.GET("/genders", controller.CommonGender)
 			common.GET("/types", controller.CommonTypes)
+			common.GET("/service", controller.CommonService)
 			common.POST("/upload", controller.CommonUpdate)
 		}
 
@@ -153,6 +154,14 @@ func NewServer(mode string) *gin.Engine {
 			simple := analytics.Group("/simple")
 			{
 				simple.POST("/generator", controller.GeneratorSimpleAnalytics)
+				simple.GET("/histories", controller.SimpleAnalyticsHistory)
+				simple.GET("/getHistoryById", controller.SimpleAnalyticsById)
+			}
+			deep := analytics.Group("/deep")
+			{
+				deep.POST("/generator", controller.GeneratorDeepAnalytics)
+				deep.GET("/histories", controller.DeepAnalyticsHistory)
+				deep.GET("/getHistoryById", controller.DeepAnalyticsById)
 			}
 		}
 	}

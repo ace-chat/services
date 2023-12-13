@@ -5,6 +5,7 @@ import (
 	"ace/model"
 	"ace/request"
 	"ace/serializer"
+	"fmt"
 	"go.uber.org/zap"
 )
 
@@ -12,9 +13,11 @@ type SimpleAnalytics struct {
 	Filename *string `form:"filename" json:"filename" binding:"required"`
 }
 
-func (s *SimpleAnalytics) Generator() serializer.Response {
+func (s *SimpleAnalytics) Generator(user model.User) serializer.Response {
 	analytics := model.Analytics{
-		Type: 1,
+		UserId: user.Id,
+		Title:  fmt.Sprintf("Simple analytics for %v", *s.Filename),
+		Type:   1,
 	}
 
 	body, err := request.Client.Post(*s.Filename, true)
@@ -28,7 +31,12 @@ func (s *SimpleAnalytics) Generator() serializer.Response {
 		return serializer.DBError(err)
 	}
 
-	var simpleAnalytics serializer.SimpleAnalytics
+	simpleAnalytics := serializer.SimpleAnalytics{
+		Id:        analytics.Id,
+		Title:     analytics.Title,
+		Content:   string(body),
+		CreatedAt: analytics.CreatedAt,
+	}
 
-	return simpleAnalytics.Bind(string(body))
+	return simpleAnalytics.Bind()
 }

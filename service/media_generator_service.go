@@ -151,6 +151,7 @@ func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 
 	body, err := request.Client.Post(model.Url["generator_social_media"], false)
 	if err != nil {
+		tx.Rollback()
 		return serializer.GeneratorError(err)
 	}
 

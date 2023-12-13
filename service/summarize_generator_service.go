@@ -51,6 +51,7 @@ func (t *SummarizeGeneratorRequest) Generator(user model.User) serializer.Respon
 	}
 	body, err := request.Client.Post(model.Url["generate_optimize_summarize"], false)
 	if err != nil {
+		tx.Rollback()
 		return serializer.GeneratorError(err)
 	}
 

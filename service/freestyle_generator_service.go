@@ -132,6 +132,7 @@ func (t *FreestyleGeneratorRequest) Generator(user model.User) serializer.Respon
 
 	body, err := request.Client.Post(model.Url["generate_freestyle_email_content"], false)
 	if err != nil {
+		tx.Rollback()
 		return serializer.GeneratorError(err)
 	}
 

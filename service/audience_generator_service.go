@@ -103,6 +103,7 @@ func (t *AudienceGeneratorRequest) Generator(user model.User) serializer.Respons
 
 	body, err := request.Client.Post(model.Url["generate_optimize_target_audience"], false)
 	if err != nil {
+		tx.Rollback()
 		return serializer.GeneratorError(err)
 	}
 

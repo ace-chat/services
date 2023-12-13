@@ -21,8 +21,9 @@ const (
 	CodePasswordError              = 20009
 	CodeTokenError                 = 20010
 	CodeGeneratorError             = 20011
-	CodeNotFoundGeneratorItemError = 20012
-	CodeStoreFileError             = 20013
+	CodeNotFoundServiceError       = 20012
+	CodeNotFoundGeneratorItemError = 20013
+	CodeStoreFileError             = 20014
 )
 
 func NeedLogin(c *gin.Context) {
@@ -116,6 +117,11 @@ func NotFoundGenderError(err error) Response {
 func NotFoundTypeError(err error) Response {
 	msg := "type invalid, please make sure you select the correct type"
 	return Err(CodeNotFoundGeneratorItemError, msg, err)
+}
+
+func NotFoundServiceError(err error) Response {
+	msg := "service invalid, please make sure you select the correct service"
+	return Err(CodeNotFoundServiceError, msg, err)
 }
 
 func StoreFileError(err error) Response {

@@ -160,6 +160,7 @@ func (t *MarketingGeneratorRequest) Generator(user model.User) serializer.Respon
 
 	body, err := request.Client.Post(model.Url["generate_cold_marketing_email_content"], false)
 	if err != nil {
+		tx.Rollback()
 		return serializer.GeneratorError(err)
 	}
 

@@ -151,6 +151,7 @@ func (e *EngineGeneratorRequest) Generator(user model.User) serializer.Response 
 
 	body, err := request.Client.Post(model.Url["generator_search_engine"], false)
 	if err != nil {
+		tx.Rollback()
 		return serializer.GeneratorError(err)
 	}
 

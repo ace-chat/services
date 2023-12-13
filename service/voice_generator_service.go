@@ -60,6 +60,7 @@ func (t *VoiceGeneratorRequest) Generator(user model.User) serializer.Response {
 
 	body, err := request.Client.Post(model.Url["generate_optimize_match_brand_voice"], false)
 	if err != nil {
+		tx.Rollback()
 		return serializer.GeneratorError(err)
 	}
 
