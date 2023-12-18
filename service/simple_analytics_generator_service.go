@@ -20,7 +20,7 @@ func (s *SimpleAnalytics) Generator(user model.User) serializer.Response {
 		Type:   1,
 	}
 
-	body, err := request.Client.Post(*s.Filename, true)
+	body, err := request.Client.Post(*s.Filename, 1)
 	if err != nil {
 		zap.L().Error("[Analytics] Create simple analytics failed", zap.Error(err))
 		return serializer.GeneratorError(err)

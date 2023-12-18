@@ -22,6 +22,7 @@ mongo:
     db: "storm"
 request:
     contentGeneration: "http://178.128.96.65:9005"
+    chat: "http://178.128.96.65:9006"
     analytics: "http://178.128.96.65:9008"
 logger:
     level: ""

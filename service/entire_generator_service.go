@@ -130,7 +130,7 @@ func (t *EntireGeneratorRequest) Generator(user model.User) serializer.Response 
 		"type":          ty.Value,
 	}
 
-	body, err := request.Client.Post(model.Url["generate_blog_entire"], false)
+	body, err := request.Client.Post(model.Url["generate_blog_entire"], 2)
 	if err != nil {
 		tx.Rollback()
 		return serializer.GeneratorError(err)

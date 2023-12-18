@@ -47,7 +47,7 @@ func (t *ParaphraseGeneratorRequest) Generator(user model.User) serializer.Respo
 		"lang": language.Name,
 	}
 
-	body, err := request.Client.Post(model.Url["generate_optimize_paraphrase"], false)
+	body, err := request.Client.Post(model.Url["generate_optimize_paraphrase"], 2)
 	if err != nil {
 		tx.Rollback()
 		return serializer.GeneratorError(err)

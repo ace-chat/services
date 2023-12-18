@@ -40,10 +40,32 @@ func BotHistory(c *gin.Context) {
 	}
 }
 
+func BotChatList(c *gin.Context) {
+	var request service.BotChatList
+	if err := c.Bind(&request); err == nil {
+		user, ok := c.Get("user")
+		if !ok {
+			serializer.NeedLogin(c)
+			c.Abort()
+			return
+		}
+		res := request.GetChatList(user.(model.User))
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, serializer.ParamError(err))
+	}
+}
+
 func BotAsk(c *gin.Context) {
 	var request service.BotAsk
 	if err := c.Bind(&request); err == nil {
-		res := request.Ask()
+		user, ok := c.Get("user")
+		if !ok {
+			serializer.NeedLogin(c)
+			c.Abort()
+			return
+		}
+		res := request.Ask(user.(model.User))
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusBadRequest, serializer.ParamError(err))

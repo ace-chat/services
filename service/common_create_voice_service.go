@@ -24,7 +24,7 @@ func (c *CommonCreateVoiceRequest) CreateVoice(user model.User) serializer.Respo
 	request.Client.Body = map[string]any{
 		"brand_text": voice.Text,
 	}
-	body, err := request.Client.Post(model.Url["create_brand_voice"], false)
+	body, err := request.Client.Post(model.Url["create_brand_voice"], 2)
 	if err != nil {
 		zap.L().Error("[Common] Create brand voice failed", zap.Error(err))
 		return serializer.GeneratorError(err)

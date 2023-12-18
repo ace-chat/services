@@ -24,6 +24,7 @@ const (
 	CodeNotFoundServiceError       = 20012
 	CodeNotFoundGeneratorItemError = 20013
 	CodeStoreFileError             = 20014
+	CodeMongoError                 = 20015
 )
 
 func NeedLogin(c *gin.Context) {
@@ -127,4 +128,9 @@ func NotFoundServiceError(err error) Response {
 func StoreFileError(err error) Response {
 	msg := "Failed to operate file"
 	return Err(CodeStoreFileError, msg, err)
+}
+
+func MongoError(err error) Response {
+	msg := "Query failed"
+	return Err(CodeMongoError, msg, err)
 }

@@ -70,6 +70,22 @@ func CommonCreateVoice(c *gin.Context) {
 	}
 }
 
+func CommonDeleteVoice(c *gin.Context) {
+	var request service.CommonDeleteVoice
+	if err := c.Bind(&request); err == nil {
+		user, ok := c.Get("user")
+		if !ok {
+			serializer.NeedLogin(c)
+			c.Abort()
+			return
+		}
+		res := request.Delete(user.(model.User))
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, serializer.ParamError(err))
+	}
+}
+
 func CommonLanguages(c *gin.Context) {
 	var request service.LanguageRequest
 	if err := c.Bind(&request); err == nil {

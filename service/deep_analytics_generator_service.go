@@ -47,7 +47,7 @@ func (d *DeepAnalytics) Generator(user model.User) serializer.Response {
 		ServiceId:    services.Id,
 	}
 
-	body, err := request.Client.Post(*d.Filename, true)
+	body, err := request.Client.Post(*d.Filename, 1)
 	if err != nil {
 		zap.L().Error("[DeepAnalytics] Create deep analytics failed", zap.Error(err))
 		return serializer.GeneratorError(err)

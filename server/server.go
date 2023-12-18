@@ -31,6 +31,7 @@ func NewServer(mode string) *gin.Engine {
 			common.GET("/tones", controller.CommonTones)
 			common.GET("/voices", controller.CommonVoices)
 			common.POST("/createVoice", controller.CommonCreateVoice)
+			common.DELETE("/deleteVoice", controller.CommonDeleteVoice)
 			common.GET("/languages", controller.CommonLanguages)
 			common.GET("/genders", controller.CommonGender)
 			common.GET("/types", controller.CommonTypes)
@@ -172,7 +173,8 @@ func NewServer(mode string) *gin.Engine {
 			bot := chat.Group("/bot")
 			{
 				bot.POST("/create", controller.BotCreate)
-				bot.GET("/botHistory", controller.BotHistory)
+				bot.GET("/getChatHistory", controller.BotHistory)
+				bot.GET("/getChatList", controller.BotChatList)
 				bot.POST("/ask", controller.BotAsk)
 			}
 		}

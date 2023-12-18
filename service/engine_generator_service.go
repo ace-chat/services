@@ -149,7 +149,7 @@ func (e *EngineGeneratorRequest) Generator(user model.User) serializer.Response 
 		"lang":                language.Iso,
 	}
 
-	body, err := request.Client.Post(model.Url["generator_search_engine"], false)
+	body, err := request.Client.Post(model.Url["generator_search_engine"], 2)
 	if err != nil {
 		tx.Rollback()
 		return serializer.GeneratorError(err)

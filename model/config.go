@@ -39,6 +39,7 @@ type Mongo struct {
 
 type Request struct {
 	ContentGeneration string `yaml:"contentGeneration" json:"contentGeneration"`
+	Chat              string `yaml:"chat" json:"chat"`
 	Analytics         string `yaml:"analytics" json:"analytics"`
 }
 

@@ -15,6 +15,7 @@ import (
 
 type HttpClient struct {
 	ContentGeneration string
+	Chat              string
 	Analytics         string
 	Header            map[string]string
 	Params            map[string]string
@@ -59,9 +60,10 @@ func (c *HttpClient) Get(uri string) ([]byte, error) {
 	return body, nil
 }
 
-func (c *HttpClient) Post(str string, t bool) ([]byte, error) {
+func (c *HttpClient) Post(str string, t int) ([]byte, error) {
 	var request *http.Request
-	if t {
+	var err error
+	if t == 1 {
 		f := fmt.Sprintf("%v/%v", pkg.Upload.Path, str)
 		file, err := os.Open(f)
 		if err != nil {
@@ -94,7 +96,12 @@ func (c *HttpClient) Post(str string, t bool) ([]byte, error) {
 			values.Add(s, fmt.Sprintf("%v", s2))
 		}
 		payload := values.Encode()
-		u, err := url.Parse(c.ContentGeneration + str)
+		var u *url.URL
+		if t == 2 {
+			u, err = url.Parse(c.ContentGeneration + str)
+		} else {
+			u, err = url.Parse(c.Chat + str)
+		}
 		if err != nil {
 			return nil, err
 		}
@@ -138,6 +145,7 @@ func Setup(r model.Request) {
 	header := make(map[string]string)
 	Client = HttpClient{
 		ContentGeneration: r.ContentGeneration,
+		Chat:              r.Chat,
 		Analytics:         r.Analytics,
 		Header:            header,
 	}

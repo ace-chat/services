@@ -4,6 +4,7 @@ import (
 	"ace/cache"
 	"ace/model"
 	"ace/serializer"
+	"context"
 	"errors"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -23,12 +24,16 @@ func (b *BotHistory) GetHistory(user model.User) serializer.Response {
 		return serializer.DBError(err)
 	}
 
-	histories := make([]any, 0)
-	//ctx := context.Background()
-	//cursor, err := cache.Mongo.Collection(bot.Title).Find(ctx, nil, nil)
-	//if err != nil {
-	//	return serializer.Response{}
-	//}
+	histories := make([]map[string]any, 0)
+	ctx := context.Background()
+	cursor, err := cache.Mongo.Collection(bot.Title).Find(ctx, nil, nil)
+	if err != nil {
+		return serializer.MongoError(err)
+	}
+	defer cursor.Close(ctx)
+	if err := cursor.All(ctx, &histories); err != nil {
+		zap.L().Error("[ChatBot] Parse history failed", zap.Error(err))
+	}
 	return serializer.Response{
 		Code: 200,
 		Data: histories,

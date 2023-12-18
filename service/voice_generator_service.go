@@ -58,7 +58,7 @@ func (t *VoiceGeneratorRequest) Generator(user model.User) serializer.Response {
 		"lang":        language.Name,
 	}
 
-	body, err := request.Client.Post(model.Url["generate_optimize_match_brand_voice"], false)
+	body, err := request.Client.Post(model.Url["generate_optimize_match_brand_voice"], 2)
 	if err != nil {
 		tx.Rollback()
 		return serializer.GeneratorError(err)

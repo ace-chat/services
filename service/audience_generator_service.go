@@ -101,7 +101,7 @@ func (t *AudienceGeneratorRequest) Generator(user model.User) serializer.Respons
 		"lang":    language.Iso,
 	}
 
-	body, err := request.Client.Post(model.Url["generate_optimize_target_audience"], false)
+	body, err := request.Client.Post(model.Url["generate_optimize_target_audience"], 2)
 	if err != nil {
 		tx.Rollback()
 		return serializer.GeneratorError(err)
