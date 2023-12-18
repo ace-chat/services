@@ -32,9 +32,8 @@ type Mysql struct {
 }
 
 type Mongo struct {
-	Host string `yaml:"host" json:"host"`
-	Port int    `yaml:"port" json:"port"`
-	DB   string `yaml:"DB" json:"db"`
+	Uri string `yaml:"uri" json:"uri"`
+	DB  string `yaml:"db" json:"db"`
 }
 
 type Request struct {

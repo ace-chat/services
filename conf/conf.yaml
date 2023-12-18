@@ -17,8 +17,7 @@ mysql:
     password: "Chenhan0804"
     db: "ace"
 mongo:
-    host: "127.0.0.1"
-    port: 27017
+    uri: "mongodb+srv://zubairahsan:dm6n1lFXCxx0I3W7@chatbot.d742zdu.mongodb.net/"
     db: "GP_chat_history"
 request:
     contentGeneration: "http://178.128.96.65:9005"
