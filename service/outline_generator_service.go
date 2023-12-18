@@ -41,7 +41,7 @@ func (t *OutlineGeneratorRequest) Generator(user model.User) serializer.Response
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundToneError(err)
 		}
-		zap.L().Error("[Outline] Get tone failure", zap.Error(err))
+		zap.L().Error("[Outline] Get tone failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -53,7 +53,7 @@ func (t *OutlineGeneratorRequest) Generator(user model.User) serializer.Response
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundVoiceError(err)
 			}
-			zap.L().Error("[Outline] Get brand voice failure", zap.Error(err))
+			zap.L().Error("[Outline] Get brand voice failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		voice = v.Content
@@ -65,7 +65,7 @@ func (t *OutlineGeneratorRequest) Generator(user model.User) serializer.Response
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundLanguageError(err)
 		}
-		zap.L().Error("[Outline] Get language failure", zap.Error(err))
+		zap.L().Error("[Outline] Get language failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -81,7 +81,7 @@ func (t *OutlineGeneratorRequest) Generator(user model.User) serializer.Response
 
 	tx := cache.DB.Begin()
 	if err := tx.Model(&model.BlogAds{}).Create(&blog).Error; err != nil {
-		zap.L().Error("[Outline] Create blog ads failure", zap.Error(err))
+		zap.L().Error("[Outline] Create blog ads failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}
@@ -108,7 +108,7 @@ func (t *OutlineGeneratorRequest) Generator(user model.User) serializer.Response
 		Text:   string(body),
 	}
 	if err := tx.Model(&model.BlogContent{}).Create(&content).Error; err != nil {
-		zap.L().Error("[Outline] Create blog content failure", zap.Error(err))
+		zap.L().Error("[Outline] Create blog content failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}

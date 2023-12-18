@@ -22,7 +22,7 @@ func InitRedis(conf model.Redis) {
 
 	err := rdb.Ping(ctx).Err()
 	if err != nil {
-		zap.L().Error("[Redis] Ping redis failure", zap.Error(err))
+		zap.L().Error("[Redis] Ping redis failed", zap.Error(err))
 		os.Exit(2)
 	}
 	Client = rdb

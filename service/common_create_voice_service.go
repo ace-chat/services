@@ -26,13 +26,13 @@ func (c *CommonCreateVoiceRequest) CreateVoice(user model.User) serializer.Respo
 	}
 	body, err := request.Client.Post(model.Url["create_brand_voice"], false)
 	if err != nil {
-		zap.L().Error("[Common] Create brand voice failure", zap.Error(err))
+		zap.L().Error("[Common] Create brand voice failed", zap.Error(err))
 		return serializer.GeneratorError(err)
 	}
 	voice.Content = string(body)
 
 	if err := cache.DB.Model(&model.Voice{}).Create(&voice).Error; err != nil {
-		zap.L().Error("[Common] Create voices failure", zap.Error(err))
+		zap.L().Error("[Common] Create voices failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

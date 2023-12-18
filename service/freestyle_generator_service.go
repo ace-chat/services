@@ -54,7 +54,7 @@ func (t *FreestyleGeneratorRequest) Generator(user model.User) serializer.Respon
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundVoiceError(err)
 			}
-			zap.L().Error("[Freestyle] Get brand voice failure", zap.Error(err))
+			zap.L().Error("[Freestyle] Get brand voice failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		voice = v.Content
@@ -69,7 +69,7 @@ func (t *FreestyleGeneratorRequest) Generator(user model.User) serializer.Respon
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundRegionError(err)
 			}
-			zap.L().Error("[Freestyle] Get region failure", zap.Error(err))
+			zap.L().Error("[Freestyle] Get region failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		region = r.Country
@@ -84,7 +84,7 @@ func (t *FreestyleGeneratorRequest) Generator(user model.User) serializer.Respon
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundGenderError(err)
 			}
-			zap.L().Error("[Freestyle] Get gender failure", zap.Error(err))
+			zap.L().Error("[Freestyle] Get gender failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		gender = g.Value
@@ -96,7 +96,7 @@ func (t *FreestyleGeneratorRequest) Generator(user model.User) serializer.Respon
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundLanguageError(err)
 		}
-		zap.L().Error("[Freestyle] Get language failure", zap.Error(err))
+		zap.L().Error("[Freestyle] Get language failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -114,7 +114,7 @@ func (t *FreestyleGeneratorRequest) Generator(user model.User) serializer.Respon
 
 	tx := cache.DB.Begin()
 	if err := tx.Model(&model.EmailAds{}).Create(&ads).Error; err != nil {
-		zap.L().Error("[Freestyle] Create email ads failure", zap.Error(err))
+		zap.L().Error("[Freestyle] Create email ads failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}
@@ -143,7 +143,7 @@ func (t *FreestyleGeneratorRequest) Generator(user model.User) serializer.Respon
 		Text:   string(body),
 	}
 	if err := tx.Model(&model.EmailContent{}).Create(&content).Error; err != nil {
-		zap.L().Error("[Freestyle] Create email content failure", zap.Error(err))
+		zap.L().Error("[Freestyle] Create email content failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}

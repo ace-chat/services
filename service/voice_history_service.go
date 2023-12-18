@@ -13,7 +13,7 @@ type VoiceHistoryRequest struct{}
 func (t *VoiceHistoryRequest) GetHistory(user model.User) serializer.Response {
 	histories := make([]model.OptimizedContent, 0)
 	if err := cache.DB.Model(&model.OptimizedContent{}).Where("user_id = ? AND type = ?", user.Id, 4).Find(&histories).Error; err != nil {
-		zap.L().Error("[Voice] Create optimized history failure", zap.Error(err))
+		zap.L().Error("[Voice] Create optimized history failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

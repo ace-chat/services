@@ -16,6 +16,10 @@ mysql:
     username: "root"
     password: "Chenhan0804"
     db: "ace"
+mongo:
+    host: "127.0.0.1"
+    port: 27017
+    db: "storm"
 request:
     contentGeneration: "http://178.128.96.65:9005"
     analytics: "http://178.128.96.65:9008"

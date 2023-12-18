@@ -39,7 +39,7 @@ func (t *SummarizeGeneratorRequest) Generator(user model.User) serializer.Respon
 
 	tx := cache.DB.Begin()
 	if err := tx.Model(&model.OptimizedAds{}).Create(&ads).Error; err != nil {
-		zap.L().Error("[Summarize] Create optimized ads failure", zap.Error(err))
+		zap.L().Error("[Summarize] Create optimized ads failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}
@@ -64,7 +64,7 @@ func (t *SummarizeGeneratorRequest) Generator(user model.User) serializer.Respon
 		Text:   string(body),
 	}
 	if err := tx.Model(&model.OptimizedContent{}).Create(&content).Error; err != nil {
-		zap.L().Error("[Summarize] Create optimized ads content failure", zap.Error(err))
+		zap.L().Error("[Summarize] Create optimized ads content failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}

@@ -19,7 +19,7 @@ func (m *SummarizeHistoryIdRequest) GetToneContentById(user model.User) serializ
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Summarize] Get optimized content failure", zap.Error(err))
+		zap.L().Error("[Summarize] Get optimized content failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -28,7 +28,7 @@ func (m *SummarizeHistoryIdRequest) GetToneContentById(user model.User) serializ
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Summarize] Get optimized ads failure", zap.Error(err))
+		zap.L().Error("[Summarize] Get optimized ads failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

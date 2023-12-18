@@ -19,7 +19,7 @@ func (m *MediaHistoryIdRequest) GetMediaContentById(user model.User) serializer.
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Media] Get social media ads content failure", zap.Error(err))
+		zap.L().Error("[Media] Get social media ads content failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -28,7 +28,7 @@ func (m *MediaHistoryIdRequest) GetMediaContentById(user model.User) serializer.
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Media] Get social media ads failure", zap.Error(err))
+		zap.L().Error("[Media] Get social media ads failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

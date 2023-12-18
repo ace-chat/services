@@ -46,7 +46,7 @@ func (e *EngineGeneratorRequest) Generator(user model.User) serializer.Response 
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundPlatformError(err)
 		}
-		zap.L().Error("[Search Engine] Get platform failure", zap.Error(err))
+		zap.L().Error("[Search Engine] Get platform failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -55,7 +55,7 @@ func (e *EngineGeneratorRequest) Generator(user model.User) serializer.Response 
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundToneError(err)
 		}
-		zap.L().Error("[Search Engine] Get tone failure", zap.Error(err))
+		zap.L().Error("[Search Engine] Get tone failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -67,7 +67,7 @@ func (e *EngineGeneratorRequest) Generator(user model.User) serializer.Response 
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundVoiceError(err)
 			}
-			zap.L().Error("[Search Engine] Get brand voice failure", zap.Error(err))
+			zap.L().Error("[Search Engine] Get brand voice failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		brandVoice = voice.Content
@@ -82,7 +82,7 @@ func (e *EngineGeneratorRequest) Generator(user model.User) serializer.Response 
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundRegionError(err)
 			}
-			zap.L().Error("[Search Engine] Get region failure", zap.Error(err))
+			zap.L().Error("[Search Engine] Get region failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		region = r.Country
@@ -97,7 +97,7 @@ func (e *EngineGeneratorRequest) Generator(user model.User) serializer.Response 
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundRegionError(err)
 			}
-			zap.L().Error("[Search Engine] Get gender failure", zap.Error(err))
+			zap.L().Error("[Search Engine] Get gender failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		gender = g.Value
@@ -109,7 +109,7 @@ func (e *EngineGeneratorRequest) Generator(user model.User) serializer.Response 
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundLanguageError(err)
 		}
-		zap.L().Error("[Search Engine] Get language failure", zap.Error(err))
+		zap.L().Error("[Search Engine] Get language failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -130,7 +130,7 @@ func (e *EngineGeneratorRequest) Generator(user model.User) serializer.Response 
 
 	tx := cache.DB.Begin()
 	if err := tx.Model(&model.EngineAds{}).Create(&media).Error; err != nil {
-		zap.L().Error("[Engine] Create search engine ads failure", zap.Error(err))
+		zap.L().Error("[Engine] Create search engine ads failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}
@@ -164,7 +164,7 @@ func (e *EngineGeneratorRequest) Generator(user model.User) serializer.Response 
 	}
 	if err := tx.Model(&model.EngineContent{}).Create(&content).Error; err != nil {
 		tx.Rollback()
-		zap.L().Error("[Engine] Create search engine ads content failure", zap.Error(err))
+		zap.L().Error("[Engine] Create search engine ads content failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

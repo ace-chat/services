@@ -80,7 +80,7 @@ func NotFoundError(err error) Response {
 }
 
 func GeneratorError(err error) Response {
-	msg := "Generator ADS failure"
+	msg := "Generator ADS failed"
 	return Err(CodeGeneratorError, msg, err)
 }
 

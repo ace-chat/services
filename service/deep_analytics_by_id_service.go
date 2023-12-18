@@ -19,7 +19,7 @@ func (s *DeepAnalyticsByIdRequest) GetAnalytics(user model.User) serializer.Resp
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[DeepAnalytics] Get analytics content failure", zap.Error(err))
+		zap.L().Error("[DeepAnalytics] Get analytics content failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

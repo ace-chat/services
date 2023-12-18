@@ -19,7 +19,7 @@ func (m *FreestyleHistoryIdRequest) GetFreestyleContentById(user model.User) ser
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Freestyle] Get email content failure", zap.Error(err))
+		zap.L().Error("[Freestyle] Get email content failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -28,7 +28,7 @@ func (m *FreestyleHistoryIdRequest) GetFreestyleContentById(user model.User) ser
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Freestyle] Get email ads failure", zap.Error(err))
+		zap.L().Error("[Freestyle] Get email ads failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

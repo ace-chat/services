@@ -12,7 +12,7 @@ type TypesRequest struct{}
 func (g *TypesRequest) GetTypes() serializer.Response {
 	types := make([]model.Type, 0)
 	if err := cache.DB.Model(&model.Type{}).Find(&types).Error; err != nil {
-		zap.L().Error("[Common] Get types failure", zap.Error(err))
+		zap.L().Error("[Common] Get types failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

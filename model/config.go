@@ -9,6 +9,7 @@ type Config struct {
 
 	Redis   Redis   `yaml:"redis" json:"redis"`
 	Mysql   Mysql   `yaml:"mysql" json:"mysql"`
+	Mongo   Mongo   `yaml:"mongo" json:"mongo"`
 	Request Request `yaml:"request" json:"request"`
 	Logger  Logger  `yaml:"logger" json:"logger"`
 	Upload  Upload  `yaml:"upload" json:"upload"`
@@ -28,6 +29,12 @@ type Mysql struct {
 	Username string `yaml:"username" json:"username"`
 	Password string `yaml:"password" json:"password"`
 	DB       string `yaml:"db" json:"db"`
+}
+
+type Mongo struct {
+	Host string `yaml:"host" json:"host"`
+	Port int    `yaml:"port" json:"port"`
+	DB   string `yaml:"DB" json:"db"`
 }
 
 type Request struct {

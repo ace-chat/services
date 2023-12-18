@@ -37,7 +37,7 @@ func (t *ParaphraseGeneratorRequest) Generator(user model.User) serializer.Respo
 
 	tx := cache.DB.Begin()
 	if err := tx.Model(&model.OptimizedAds{}).Create(&ads).Error; err != nil {
-		zap.L().Error("[Paraphrase] Create optimized ads failure", zap.Error(err))
+		zap.L().Error("[Paraphrase] Create optimized ads failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}
@@ -62,7 +62,7 @@ func (t *ParaphraseGeneratorRequest) Generator(user model.User) serializer.Respo
 		Text:   string(body),
 	}
 	if err := tx.Model(&model.OptimizedContent{}).Create(&content).Error; err != nil {
-		zap.L().Error("[Paraphrase] Create optimized content failure", zap.Error(err))
+		zap.L().Error("[Paraphrase] Create optimized content failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}

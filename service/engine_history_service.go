@@ -13,7 +13,7 @@ type EngineHistoryRequest struct{}
 func (e *EngineHistoryRequest) GetHistory(user model.User) serializer.Response {
 	histories := make([]model.EngineContent, 0)
 	if err := cache.DB.Model(&model.EngineContent{}).Where("user_id = ?", user.Id).Find(&histories).Error; err != nil {
-		zap.L().Error("[Engine] Get search engine ads history failure", zap.Error(err))
+		zap.L().Error("[Engine] Get search engine ads history failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

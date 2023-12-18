@@ -19,7 +19,7 @@ func (e *EngineHistoryIdRequest) GetMediaContentById(user model.User) serializer
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Engine] Get search engine ads content failure", zap.Error(err))
+		zap.L().Error("[Engine] Get search engine ads content failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -28,7 +28,7 @@ func (e *EngineHistoryIdRequest) GetMediaContentById(user model.User) serializer
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Engine] Get search engine ads failure", zap.Error(err))
+		zap.L().Error("[Engine] Get search engine ads failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

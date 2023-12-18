@@ -19,7 +19,7 @@ func (m *ToneHistoryIdRequest) GetToneContentById(user model.User) serializer.Re
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Tone] Get optimized ads content failure", zap.Error(err))
+		zap.L().Error("[Tone] Get optimized ads content failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -28,7 +28,7 @@ func (m *ToneHistoryIdRequest) GetToneContentById(user model.User) serializer.Re
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Tone] Get optimized ads failure", zap.Error(err))
+		zap.L().Error("[Tone] Get optimized ads failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

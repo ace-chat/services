@@ -20,7 +20,7 @@ func (l *Login) Login() serializer.Response {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.UserNotFoundError(err)
 		} else {
-			zap.L().Error("[Login] Get user failure", zap.Error(err))
+			zap.L().Error("[Login] Get user failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 	}

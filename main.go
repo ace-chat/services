@@ -24,6 +24,7 @@ func main() {
 
 	cache.InitRedis(config.Redis)
 	cache.InitMysql(config.Mysql)
+	cache.InitMongo(config.Mongo)
 
 	pkg.Init(config.Upload)
 
@@ -31,7 +32,7 @@ func main() {
 
 	err := r.Run(fmt.Sprintf("%s:%d", config.Host, config.Port))
 	if err != nil {
-		zap.L().Error("[Service] Start server failure", zap.Error(err))
+		zap.L().Error("[Service] Start server failed", zap.Error(err))
 		os.Exit(0)
 	}
 }

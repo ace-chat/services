@@ -13,7 +13,7 @@ type MarketingHistoryRequest struct{}
 func (t *MarketingHistoryRequest) GetHistory(user model.User) serializer.Response {
 	histories := make([]model.EmailContent, 0)
 	if err := cache.DB.Model(&model.EmailContent{}).Where("user_id = ? AND type = ?", user.Id, 2).Find(&histories).Error; err != nil {
-		zap.L().Error("[Marketing] Get email content failure", zap.Error(err))
+		zap.L().Error("[Marketing] Get email content failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

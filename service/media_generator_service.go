@@ -46,7 +46,7 @@ func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundPlatformError(err)
 		}
-		zap.L().Error("[Social Media] Get platform failure", zap.Error(err))
+		zap.L().Error("[Social Media] Get platform failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -55,7 +55,7 @@ func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundToneError(err)
 		}
-		zap.L().Error("[Social Media] Get tone failure", zap.Error(err))
+		zap.L().Error("[Social Media] Get tone failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -67,7 +67,7 @@ func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundVoiceError(err)
 			}
-			zap.L().Error("[Social Media] Get brand voice failure", zap.Error(err))
+			zap.L().Error("[Social Media] Get brand voice failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		brandVoice = voice.Content
@@ -82,7 +82,7 @@ func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundRegionError(err)
 			}
-			zap.L().Error("[Social Media] Get region failure", zap.Error(err))
+			zap.L().Error("[Social Media] Get region failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		region = r.Country
@@ -97,7 +97,7 @@ func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundRegionError(err)
 			}
-			zap.L().Error("[Social Media] Get gender failure", zap.Error(err))
+			zap.L().Error("[Social Media] Get gender failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		gender = g.Value
@@ -109,7 +109,7 @@ func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundLanguageError(err)
 		}
-		zap.L().Error("[Social Media] Get language failure", zap.Error(err))
+		zap.L().Error("[Social Media] Get language failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -130,7 +130,7 @@ func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 
 	tx := cache.DB.Begin()
 	if err := tx.Model(&model.MediaAds{}).Create(&media).Error; err != nil {
-		zap.L().Error("[Media] Create social media ads failure", zap.Error(err))
+		zap.L().Error("[Media] Create social media ads failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}
@@ -163,7 +163,7 @@ func (m *MediaGeneratorRequest) Generator(user model.User) serializer.Response {
 		Text:   string(body),
 	}
 	if err := tx.Model(&model.MediaContent{}).Create(&content).Error; err != nil {
-		zap.L().Error("[Media] Create social media ads content failure", zap.Error(err))
+		zap.L().Error("[Media] Create social media ads content failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}

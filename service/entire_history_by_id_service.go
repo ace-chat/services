@@ -19,7 +19,7 @@ func (m *EntireHistoryIdRequest) GetEntireContentById(user model.User) serialize
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Entire] Get blog content failure", zap.Error(err))
+		zap.L().Error("[Entire] Get blog content failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -28,7 +28,7 @@ func (m *EntireHistoryIdRequest) GetEntireContentById(user model.User) serialize
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Entire] Get blog ads failure", zap.Error(err))
+		zap.L().Error("[Entire] Get blog ads failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

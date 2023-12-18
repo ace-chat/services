@@ -22,12 +22,12 @@ func (s *SimpleAnalytics) Generator(user model.User) serializer.Response {
 
 	body, err := request.Client.Post(*s.Filename, true)
 	if err != nil {
-		zap.L().Error("[Analytics] Create simple analytics failure", zap.Error(err))
+		zap.L().Error("[Analytics] Create simple analytics failed", zap.Error(err))
 		return serializer.GeneratorError(err)
 	}
 	analytics.Content = string(body)
 	if err := cache.DB.Model(&model.Analytics{}).Create(&analytics).Error; err != nil {
-		zap.L().Error("[Analytics] Create simple analytics record failure", zap.Error(err))
+		zap.L().Error("[Analytics] Create simple analytics record failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

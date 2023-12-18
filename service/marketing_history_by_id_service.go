@@ -19,7 +19,7 @@ func (m *MarketingHistoryIdRequest) GetMarketingContentById(user model.User) ser
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Marketing] Get email content failure", zap.Error(err))
+		zap.L().Error("[Marketing] Get email content failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -28,7 +28,7 @@ func (m *MarketingHistoryIdRequest) GetMarketingContentById(user model.User) ser
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Marketing] Get email ads failure", zap.Error(err))
+		zap.L().Error("[Marketing] Get email ads failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

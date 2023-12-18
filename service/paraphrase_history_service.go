@@ -13,7 +13,7 @@ type ParaphraseHistoryRequest struct{}
 func (t *ParaphraseHistoryRequest) GetHistory(user model.User) serializer.Response {
 	histories := make([]model.OptimizedContent, 0)
 	if err := cache.DB.Model(&model.OptimizedContent{}).Where("user_id = ? AND type = ?", user.Id, 3).Find(&histories).Error; err != nil {
-		zap.L().Error("[Paraphrase] Get optimized history failure", zap.Error(err))
+		zap.L().Error("[Paraphrase] Get optimized history failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

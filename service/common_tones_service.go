@@ -15,7 +15,7 @@ type TonesRequest struct {
 func (t *TonesRequest) GetTones() serializer.Response {
 	tones := make([]model.Tone, 0)
 	if err := cache.DB.Model(&model.Tone{}).Where("type = ?", t.Type).Find(&tones).Error; err != nil {
-		zap.L().Error("[Common] Get tones failure", zap.Error(err))
+		zap.L().Error("[Common] Get tones failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

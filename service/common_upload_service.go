@@ -18,7 +18,7 @@ func (u *Upload) Store(c *gin.Context) serializer.Response {
 	filename := fmt.Sprintf("file-%v-%v", time.Now().Unix(), u.File.Filename)
 	err := c.SaveUploadedFile(u.File, fmt.Sprintf("%v/%v", pkg.Upload.Path, filename))
 	if err != nil {
-		zap.L().Error("[Upload] Store file failure", zap.Error(err))
+		zap.L().Error("[Upload] Store file failed", zap.Error(err))
 		return serializer.StoreFileError(err)
 	}
 	return serializer.Response{

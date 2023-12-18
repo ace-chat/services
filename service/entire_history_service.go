@@ -13,7 +13,7 @@ type EntireHistoryRequest struct{}
 func (t *EntireHistoryRequest) GetHistory(user model.User) serializer.Response {
 	histories := make([]model.BlogContent, 0)
 	if err := cache.DB.Model(&model.BlogContent{}).Where("user_id = ? AND type = ?", user.Id, 3).Find(&histories).Error; err != nil {
-		zap.L().Error("[Entire] Get blog history failure", zap.Error(err))
+		zap.L().Error("[Entire] Get blog history failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

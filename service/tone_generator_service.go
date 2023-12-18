@@ -47,7 +47,7 @@ func (t *ToneGeneratorRequest) Generator(user model.User) serializer.Response {
 
 	tx := cache.DB.Begin()
 	if err := tx.Model(&model.OptimizedAds{}).Create(&ads).Error; err != nil {
-		zap.L().Error("[Tone] Create change tone failure", zap.Error(err))
+		zap.L().Error("[Tone] Create change tone failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}
@@ -73,7 +73,7 @@ func (t *ToneGeneratorRequest) Generator(user model.User) serializer.Response {
 		Text:   string(body),
 	}
 	if err := tx.Model(&model.OptimizedContent{}).Create(&content).Error; err != nil {
-		zap.L().Error("[Tone] Create optimized content failure", zap.Error(err))
+		zap.L().Error("[Tone] Create optimized content failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}

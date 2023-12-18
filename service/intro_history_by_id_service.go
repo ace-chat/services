@@ -19,7 +19,7 @@ func (m *IntroHistoryIdRequest) GetIntroContentById(user model.User) serializer.
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Intro] Get blog content failure", zap.Error(err))
+		zap.L().Error("[Intro] Get blog content failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -28,7 +28,7 @@ func (m *IntroHistoryIdRequest) GetIntroContentById(user model.User) serializer.
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Intro] Get blog ads failure", zap.Error(err))
+		zap.L().Error("[Intro] Get blog ads failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

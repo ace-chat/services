@@ -19,12 +19,12 @@ func (r *RegisterRequest) Register() serializer.Response {
 		DisplayName: r.Email,
 	}
 	if err := user.SetPassword(r.Password); err != nil {
-		zap.L().Error("[Register] Set password failure", zap.Error(err))
+		zap.L().Error("[Register] Set password failed", zap.Error(err))
 		return serializer.PasswordError()
 	}
 
 	if err := cache.DB.Model(&model.User{}).Create(&user).Error; err != nil {
-		zap.L().Error("[Register] Create user failure", zap.Error(err))
+		zap.L().Error("[Register] Create user failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

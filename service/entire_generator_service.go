@@ -59,7 +59,7 @@ func (t *EntireGeneratorRequest) Generator(user model.User) serializer.Response 
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundToneError(err)
 		}
-		zap.L().Error("[Entire] Get tone failure", zap.Error(err))
+		zap.L().Error("[Entire] Get tone failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -71,7 +71,7 @@ func (t *EntireGeneratorRequest) Generator(user model.User) serializer.Response 
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundVoiceError(err)
 			}
-			zap.L().Error("[Entire] Get brand voice failure", zap.Error(err))
+			zap.L().Error("[Entire] Get brand voice failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		voice = v.Content
@@ -83,7 +83,7 @@ func (t *EntireGeneratorRequest) Generator(user model.User) serializer.Response 
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundLanguageError(err)
 		}
-		zap.L().Error("[Entire] Get language failure", zap.Error(err))
+		zap.L().Error("[Entire] Get language failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -92,7 +92,7 @@ func (t *EntireGeneratorRequest) Generator(user model.User) serializer.Response 
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundTypeError(err)
 		}
-		zap.L().Error("[Entire] Get type failure", zap.Error(err))
+		zap.L().Error("[Entire] Get type failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -112,7 +112,7 @@ func (t *EntireGeneratorRequest) Generator(user model.User) serializer.Response 
 
 	tx := cache.DB.Begin()
 	if err := tx.Model(&model.BlogAds{}).Create(&blog).Error; err != nil {
-		zap.L().Error("[Entire] Create blog ads failure", zap.Error(err))
+		zap.L().Error("[Entire] Create blog ads failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}
@@ -143,7 +143,7 @@ func (t *EntireGeneratorRequest) Generator(user model.User) serializer.Response 
 		Text:   string(body),
 	}
 	if err := tx.Model(&model.BlogContent{}).Create(&content).Error; err != nil {
-		zap.L().Error("[Entire] Create blog content failure", zap.Error(err))
+		zap.L().Error("[Entire] Create blog content failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}

@@ -33,7 +33,7 @@ func (d *DeepAnalytics) Generator(user model.User) serializer.Response {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundServiceError(err)
 		}
-		zap.L().Error("[DeepAnalytics] Get service failure", zap.Error(err))
+		zap.L().Error("[DeepAnalytics] Get service failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -49,13 +49,13 @@ func (d *DeepAnalytics) Generator(user model.User) serializer.Response {
 
 	body, err := request.Client.Post(*d.Filename, true)
 	if err != nil {
-		zap.L().Error("[DeepAnalytics] Create deep analytics failure", zap.Error(err))
+		zap.L().Error("[DeepAnalytics] Create deep analytics failed", zap.Error(err))
 		return serializer.GeneratorError(err)
 	}
 	analytics.Content = string(body)
 
 	if err := cache.DB.Model(&model.Analytics{}).Create(&analytics).Error; err != nil {
-		zap.L().Error("[DeepAnalytics] Create deep analytics record failure", zap.Error(err))
+		zap.L().Error("[DeepAnalytics] Create deep analytics record failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

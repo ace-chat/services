@@ -44,7 +44,7 @@ func (t *AudienceGeneratorRequest) Generator(user model.User) serializer.Respons
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundRegionError(err)
 			}
-			zap.L().Error("[Audience] Get region failure", zap.Error(err))
+			zap.L().Error("[Audience] Get region failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		region = r.Country
@@ -59,7 +59,7 @@ func (t *AudienceGeneratorRequest) Generator(user model.User) serializer.Respons
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundGenderError(err)
 			}
-			zap.L().Error("[Audience] Get gender failure", zap.Error(err))
+			zap.L().Error("[Audience] Get gender failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		gender = g.Value
@@ -87,7 +87,7 @@ func (t *AudienceGeneratorRequest) Generator(user model.User) serializer.Respons
 
 	tx := cache.DB.Begin()
 	if err := tx.Model(&model.OptimizedAds{}).Create(&ads).Error; err != nil {
-		zap.L().Error("[Audience] Create optimized ads failure", zap.Error(err))
+		zap.L().Error("[Audience] Create optimized ads failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}
@@ -116,7 +116,7 @@ func (t *AudienceGeneratorRequest) Generator(user model.User) serializer.Respons
 		Text:   string(body),
 	}
 	if err := tx.Model(&model.OptimizedContent{}).Create(&content).Error; err != nil {
-		zap.L().Error("[Audience] Create optimized content failure", zap.Error(err))
+		zap.L().Error("[Audience] Create optimized content failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}

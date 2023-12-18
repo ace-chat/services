@@ -12,7 +12,7 @@ type ServicesRequest struct{}
 func (s *ServicesRequest) GetServices() serializer.Response {
 	services := make([]model.Service, 0)
 	if err := cache.DB.Model(&model.Service{}).Find(&services).Error; err != nil {
-		zap.L().Error("[Common] Get service failure", zap.Error(err))
+		zap.L().Error("[Common] Get service failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

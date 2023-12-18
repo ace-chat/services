@@ -13,7 +13,7 @@ type LanguageRequest struct{}
 func (l *LanguageRequest) GetLanguages() serializer.Response {
 	languages := make([]model.Language, 0)
 	if err := cache.DB.Model(&model.Language{}).Find(&languages).Error; err != nil {
-		zap.L().Error("[Common] Get language failure", zap.Error(err))
+		zap.L().Error("[Common] Get language failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

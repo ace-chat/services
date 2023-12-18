@@ -33,7 +33,7 @@ func migration() {
 	)
 
 	if err != nil {
-		zap.L().Error("[Mysql] AutoMigrate mysql table failure", zap.Error(err))
+		zap.L().Error("[Mysql] AutoMigrate mysql table failed", zap.Error(err))
 		os.Exit(1)
 	}
 }

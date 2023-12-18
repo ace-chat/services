@@ -15,7 +15,7 @@ func Logger() gin.HandlerFunc {
 		query := c.Request.URL.RawQuery
 		body, err := c.GetRawData()
 		if err != nil {
-			zap.L().Error("[Http] Get raw data failure", zap.Error(err))
+			zap.L().Error("[Http] Get raw data failed", zap.Error(err))
 		}
 
 		cost := time.Since(start)

@@ -27,13 +27,13 @@ func InitMysql(conf model.Mysql) {
 	}
 	db, err := gorm.Open(mysql.Open(dsn), &config)
 	if err != nil {
-		zap.L().Error("[Mysql] Open mysql failure", zap.Error(err))
+		zap.L().Error("[Mysql] Open mysql failed", zap.Error(err))
 		os.Exit(1)
 	}
 
 	sqlDB, err := db.DB()
 	if err != nil {
-		zap.L().Error("[Mysql] DealWith mysql connection failure", zap.Error(err))
+		zap.L().Error("[Mysql] DealWith mysql connection failed", zap.Error(err))
 		os.Exit(1)
 	}
 

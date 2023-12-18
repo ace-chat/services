@@ -63,7 +63,7 @@ func (t *AdvantageGeneratorRequest) Generator(user model.User) serializer.Respon
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundToneError(err)
 		}
-		zap.L().Error("[Advantage] Get tone failure", zap.Error(err))
+		zap.L().Error("[Advantage] Get tone failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -75,7 +75,7 @@ func (t *AdvantageGeneratorRequest) Generator(user model.User) serializer.Respon
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundVoiceError(err)
 			}
-			zap.L().Error("[Advantage] Get brand voice failure", zap.Error(err))
+			zap.L().Error("[Advantage] Get brand voice failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		voice = v.Content
@@ -90,7 +90,7 @@ func (t *AdvantageGeneratorRequest) Generator(user model.User) serializer.Respon
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundRegionError(err)
 			}
-			zap.L().Error("[Advantage] Get region failure", zap.Error(err))
+			zap.L().Error("[Advantage] Get region failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		region = r.Country
@@ -105,7 +105,7 @@ func (t *AdvantageGeneratorRequest) Generator(user model.User) serializer.Respon
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundGenderError(err)
 			}
-			zap.L().Error("[Advantage] Get gender failure", zap.Error(err))
+			zap.L().Error("[Advantage] Get gender failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		gender = g.Value
@@ -117,7 +117,7 @@ func (t *AdvantageGeneratorRequest) Generator(user model.User) serializer.Respon
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundLanguageError(err)
 		}
-		zap.L().Error("[Advantage] Get language failure", zap.Error(err))
+		zap.L().Error("[Advantage] Get language failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -139,7 +139,7 @@ func (t *AdvantageGeneratorRequest) Generator(user model.User) serializer.Respon
 
 	tx := cache.DB.Begin()
 	if err := tx.Model(&model.EmailAds{}).Create(&ads).Error; err != nil {
-		zap.L().Error("[Advantage] Create email ads failure", zap.Error(err))
+		zap.L().Error("[Advantage] Create email ads failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}
@@ -171,7 +171,7 @@ func (t *AdvantageGeneratorRequest) Generator(user model.User) serializer.Respon
 		Text:   string(body),
 	}
 	if err := tx.Model(&model.EmailContent{}).Create(&content).Error; err != nil {
-		zap.L().Error("[Advantage] Create email content failure", zap.Error(err))
+		zap.L().Error("[Advantage] Create email content failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}

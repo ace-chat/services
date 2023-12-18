@@ -41,7 +41,7 @@ func (t *IntroGeneratorRequest) Generator(user model.User) serializer.Response {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundToneError(err)
 		}
-		zap.L().Error("[Intro] Get tone failure", zap.Error(err))
+		zap.L().Error("[Intro] Get tone failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -53,7 +53,7 @@ func (t *IntroGeneratorRequest) Generator(user model.User) serializer.Response {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return serializer.NotFoundVoiceError(err)
 			}
-			zap.L().Error("[Intro] Get brand voice failure", zap.Error(err))
+			zap.L().Error("[Intro] Get brand voice failed", zap.Error(err))
 			return serializer.DBError(err)
 		}
 		voice = v.Content
@@ -65,7 +65,7 @@ func (t *IntroGeneratorRequest) Generator(user model.User) serializer.Response {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundLanguageError(err)
 		}
-		zap.L().Error("[Intro] Get language failure", zap.Error(err))
+		zap.L().Error("[Intro] Get language failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -81,7 +81,7 @@ func (t *IntroGeneratorRequest) Generator(user model.User) serializer.Response {
 
 	tx := cache.DB.Begin()
 	if err := tx.Model(&model.BlogAds{}).Create(&blog).Error; err != nil {
-		zap.L().Error("[Intro] Create blog ads failure", zap.Error(err))
+		zap.L().Error("[Intro] Create blog ads failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}
@@ -108,7 +108,7 @@ func (t *IntroGeneratorRequest) Generator(user model.User) serializer.Response {
 		Text:   string(body),
 	}
 	if err := tx.Model(&model.BlogContent{}).Create(&content).Error; err != nil {
-		zap.L().Error("[Intro] Create blog content failure", zap.Error(err))
+		zap.L().Error("[Intro] Create blog content failed", zap.Error(err))
 		tx.Rollback()
 		return serializer.DBError(err)
 	}

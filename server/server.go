@@ -150,6 +150,7 @@ func NewServer(mode string) *gin.Engine {
 		}
 
 		analytics := api.Group("/analytics")
+		analytics.Use(middleware.Auth())
 		{
 			simple := analytics.Group("/simple")
 			{
@@ -162,6 +163,17 @@ func NewServer(mode string) *gin.Engine {
 				deep.POST("/generator", controller.GeneratorDeepAnalytics)
 				deep.GET("/histories", controller.DeepAnalyticsHistory)
 				deep.GET("/getHistoryById", controller.DeepAnalyticsById)
+			}
+		}
+
+		chat := api.Group("/chat")
+		chat.Use(middleware.Auth())
+		{
+			bot := chat.Group("/bot")
+			{
+				bot.POST("/create", controller.BotCreate)
+				bot.GET("/botHistory", controller.BotHistory)
+				bot.POST("/ask", controller.BotAsk)
 			}
 		}
 	}

@@ -19,7 +19,7 @@ func (m *WelcomeHistoryIdRequest) GetWelcomeContentById(user model.User) seriali
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Welcome] Get email content failure", zap.Error(err))
+		zap.L().Error("[Welcome] Get email content failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
@@ -28,7 +28,7 @@ func (m *WelcomeHistoryIdRequest) GetWelcomeContentById(user model.User) seriali
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
-		zap.L().Error("[Welcome] Get email ads failure", zap.Error(err))
+		zap.L().Error("[Welcome] Get email ads failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 

@@ -15,7 +15,7 @@ type PlatformRequest struct {
 func (p *PlatformRequest) GetPlatforms() serializer.Response {
 	platforms := make([]model.Platform, 0)
 	if err := cache.DB.Model(&model.Platform{}).Where("type = ?", p.Type).Find(&platforms).Error; err != nil {
-		zap.L().Error("[Common] Get platform failure", zap.Error(err))
+		zap.L().Error("[Common] Get platform failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
 
