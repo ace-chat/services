@@ -5,7 +5,9 @@ import (
 	"ace/model"
 	"ace/serializer"
 	"context"
+	"encoding/json"
 	"errors"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -25,9 +27,9 @@ func (b *BotHistory) GetHistory(user model.User) serializer.Response {
 		return serializer.DBError(err)
 	}
 
-	histories := make([]map[string]any, 0)
+	histories := make([]model.ChatHistory, 0)
 	ctx := context.Background()
-	cursor, err := cache.Mongo.Collection(bot.Title).Find(ctx, nil, nil)
+	cursor, err := cache.Mongo.Collection(bot.ChatId).Find(ctx, bson.D{{}})
 	if err != nil {
 		if errors.Is(mongo.ErrNilDocument, err) {
 			return serializer.Response{
@@ -41,8 +43,25 @@ func (b *BotHistory) GetHistory(user model.User) serializer.Response {
 	if err := cursor.All(ctx, &histories); err != nil {
 		zap.L().Error("[ChatBot] Parse history failed", zap.Error(err))
 	}
+
+	h := make([]model.History, 0)
+	for _, history := range histories {
+		var subHistory model.ChatSubHistory
+		err := json.Unmarshal([]byte(history.History), &subHistory)
+		if err != nil {
+			zap.L().Error("[ChatBot] Unmarshal history failed", zap.Error(err))
+			continue
+		}
+		ht := model.History{
+			Type:    subHistory.Type,
+			Content: subHistory.Data.Content,
+			Time:    history.SessionId,
+		}
+		h = append(h, ht)
+	}
+
 	return serializer.Response{
 		Code: 200,
-		Data: histories,
+		Data: h,
 	}
 }
