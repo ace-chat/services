@@ -30,6 +30,7 @@ func migration() {
 		&model.Type{},
 		&model.Analytics{},
 		&model.Service{},
+		&model.ChatBot{},
 	)
 
 	if err != nil {

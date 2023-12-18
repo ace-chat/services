@@ -19,7 +19,7 @@ mysql:
 mongo:
     host: "127.0.0.1"
     port: 27017
-    db: "storm"
+    db: "GP_chat_history"
 request:
     contentGeneration: "http://178.128.96.65:9005"
     chat: "http://178.128.96.65:9006"

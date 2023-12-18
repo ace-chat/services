@@ -25,7 +25,7 @@ func (b *BotAsk) Ask(user model.User) serializer.Response {
 		return serializer.DBError(err)
 	}
 	request.Client.Body = map[string]any{
-		"db_name": bot.Title,
+		"db_name": bot.ChatId,
 		"msg":     *b.Content,
 	}
 	body, err := request.Client.Post("/chat", 3)

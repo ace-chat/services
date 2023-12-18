@@ -6,6 +6,7 @@ import (
 	"ace/serializer"
 	"context"
 	"errors"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -28,6 +29,12 @@ func (b *BotHistory) GetHistory(user model.User) serializer.Response {
 	ctx := context.Background()
 	cursor, err := cache.Mongo.Collection(bot.Title).Find(ctx, nil, nil)
 	if err != nil {
+		if errors.Is(mongo.ErrNilDocument, err) {
+			return serializer.Response{
+				Code: 200,
+				Data: histories,
+			}
+		}
 		return serializer.MongoError(err)
 	}
 	defer cursor.Close(ctx)

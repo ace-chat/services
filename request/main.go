@@ -97,10 +97,13 @@ func (c *HttpClient) Post(str string, t int) ([]byte, error) {
 		}
 		payload := values.Encode()
 		var u *url.URL
+		var method string
 		if t == 2 {
 			u, err = url.Parse(c.ContentGeneration + str)
+			method = "POST"
 		} else {
 			u, err = url.Parse(c.Chat + str)
+			method = "GET"
 		}
 		if err != nil {
 			return nil, err
@@ -110,7 +113,7 @@ func (c *HttpClient) Post(str string, t int) ([]byte, error) {
 			c.Header["Content-Type"] = "application/x-www-form-urlencoded"
 		}
 
-		request, err = http.NewRequest("POST", u.String(), strings.NewReader(payload))
+		request, err = http.NewRequest(method, u.String(), strings.NewReader(payload))
 		if err != nil {
 			return nil, err
 		}
