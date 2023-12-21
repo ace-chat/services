@@ -19,7 +19,7 @@ func GenerateToken(id uint, user model.User) (string, error) {
 	issuer := "ace"
 	claims := Claims{
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 2)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
 			Issuer:    issuer,
 			ID:        strconv.Itoa(int(id)),
 		},
