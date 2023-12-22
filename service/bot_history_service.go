@@ -14,7 +14,7 @@ import (
 )
 
 type BotHistory struct {
-	Id *uint `form:"id" json:"id" binding:"required"`
+	Id *string `form:"id" json:"id" binding:"required"`
 }
 
 func (b *BotHistory) GetHistory(user model.User) serializer.Response {

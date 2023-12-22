@@ -11,7 +11,7 @@ import (
 )
 
 type BotAsk struct {
-	Id      uint    `form:"id" json:"id" binding:"required"`
+	Id      *string `form:"id" json:"id" binding:"required"`
 	Content *string `form:"content" json:"content" binding:"required"`
 }
 
