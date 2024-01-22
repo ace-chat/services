@@ -17,7 +17,7 @@ type BotAsk struct {
 
 func (b *BotAsk) Ask(user model.User) serializer.Response {
 	var bot model.ChatBot
-	if err := cache.DB.Model(&model.ChatBot{}).Where("id = ? AND user_id = ?", b.Id, user.Id).First(&bot).Error; err != nil {
+	if err := cache.DB.Model(&model.ChatBot{}).Where("chat_id = ? AND user_id = ?", b.Id, user.Id).First(&bot).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return serializer.NotFoundError(err)
 		}
