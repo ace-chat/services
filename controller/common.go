@@ -70,6 +70,25 @@ func CommonCreateVoice(c *gin.Context) {
 	}
 }
 
+/*
+ * @Description: Save the generated voice to the database
+*/
+func CommonSaveVoice(c *gin.Context) {
+	var request service.CommonSaveVoiceRequest
+	if err := c.Bind(&request); err == nil {
+		user, ok := c.Get("user")
+		if !ok {
+			serializer.NeedLogin(c)
+			c.Abort()
+			return
+		}
+		res := request.SaveVoice(user.(model.User))
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, serializer.ParamError(err))
+	}
+}
+
 func CommonDeleteVoice(c *gin.Context) {
 	var request service.CommonDeleteVoice
 	if err := c.Bind(&request); err == nil {
