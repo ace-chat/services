@@ -1,23 +1,21 @@
 package service
 
 import (
-	"ace/cache"
 	"ace/model"
 	"ace/request"
 	"ace/serializer"
-	"go.uber.org/zap"
 	"net/http"
+
+	"go.uber.org/zap"
 )
 
 type CommonCreateVoiceRequest struct {
-	Name string `form:"name" json:"name" binding:"required"`
 	Text string `form:"text" json:"text" binding:"required"`
 }
 
 func (c *CommonCreateVoiceRequest) CreateVoice(user model.User) serializer.Response {
 	voice := model.Voice{
 		UserId: user.Id,
-		Name:   c.Name,
 		Text:   c.Text,
 	}
 
@@ -31,13 +29,8 @@ func (c *CommonCreateVoiceRequest) CreateVoice(user model.User) serializer.Respo
 	}
 	voice.Content = string(body)
 
-	if err := cache.DB.Model(&model.Voice{}).Create(&voice).Error; err != nil {
-		zap.L().Error("[Common] Create voices failed", zap.Error(err))
-		return serializer.DBError(err)
-	}
-
 	return serializer.Response{
 		Code: http.StatusOK,
-		Data: voice,
+		Data: voice.Content,
 	}
 }

@@ -31,6 +31,7 @@ func NewServer(mode string) *gin.Engine {
 			common.GET("/tones", controller.CommonTones)
 			common.GET("/voices", controller.CommonVoices)
 			common.POST("/createVoice", controller.CommonCreateVoice)
+			common.POST("/saveVoice", controller.CommonSaveVoice)
 			common.DELETE("/deleteVoice", controller.CommonDeleteVoice)
 			common.GET("/languages", controller.CommonLanguages)
 			common.GET("/genders", controller.CommonGender)
