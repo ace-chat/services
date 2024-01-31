@@ -14,7 +14,6 @@ type GetUserInfo struct{}
 
 type UpdateUserInfo struct {
 	DisplayName string `form:"display_name" json:"display_name"`
-	Email       string `form:"email" json:"email" binding:"required"`
 	Phone       string `form:"phone" json:"phone"`
 }
 
@@ -33,7 +32,6 @@ func (g *GetUserInfo) GetUserInfo(user model.User) serializer.Response {
 func (u *UpdateUserInfo) UpdateUserInfo(user model.User) serializer.Response {
 	userModel := model.User{
 		DisplayName: u.DisplayName,
-		Email:       u.Email,
 		Phone:       u.Phone,
 	}
 
