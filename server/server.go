@@ -23,6 +23,7 @@ func NewServer(mode string) *gin.Engine {
 		{
 			user.GET("/getUserInfo", controller.GetUserInfoController)
 			user.POST("/updateUserInfo", controller.UpdateUserInfoController)
+			user.POST("/updatePassword", controller.UpdatePasswordController)
 		}
 
 		common := api.Group("/common")
