@@ -35,6 +35,7 @@ func UpdateUserInfoController(c *gin.Context) {
 			return
 		}
 		res := request.UpdateUserInfo(user.(model.User))
+		c.Set("user", res.Data.(model.User))
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusBadRequest, serializer.ParamError(err))

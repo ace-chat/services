@@ -2,9 +2,12 @@ package middleware
 
 import (
 	"ace/auth"
+	"ace/cache"
+	"ace/model"
 	"ace/serializer"
-	"github.com/gin-gonic/gin"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Auth() gin.HandlerFunc {
@@ -34,7 +37,14 @@ func Auth() gin.HandlerFunc {
 			return
 		}
 
-		c.Set("user", claims.User)
+		var user model.User
+		if err := cache.DB.Model(&model.User{}).Where("id = ?", claims.User.Id).First(&user).Error; err != nil {
+			serializer.NeedLogin(c)
+			c.Abort()
+			return
+		}
+
+		c.Set("user", user)
 		c.Next()
 	}
 }
