@@ -3,6 +3,7 @@ package server
 import (
 	"ace/controller"
 	"ace/middleware"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,6 +22,8 @@ func NewServer(mode string) *gin.Engine {
 		user.Use(middleware.Auth())
 		{
 			user.GET("/getUserInfo", controller.GetUserInfoController)
+			user.POST("/updateUserInfo", controller.UpdateUserInfoController)
+			user.POST("/updatePassword", controller.UpdatePasswordController)
 		}
 
 		common := api.Group("/common")
