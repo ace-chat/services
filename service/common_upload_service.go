@@ -11,12 +11,12 @@ import (
 )
 
 type Upload struct {
-	File *multipart.FileHeader `form:"file" json:"file" binding:"required"`
+	BusinessChatBotFile *multipart.FileHeader `form:"file" json:"file" binding:"required"`
 }
 
 func (u *Upload) Store(c *gin.Context) serializer.Response {
-	filename := fmt.Sprintf("file-%v-%v", time.Now().Unix(), u.File.Filename)
-	err := c.SaveUploadedFile(u.File, fmt.Sprintf("%v/%v", pkg.Upload.Path, filename))
+	filename := fmt.Sprintf("file-%v-%v", time.Now().Unix(), u.BusinessChatBotFile.Filename)
+	err := c.SaveUploadedFile(u.BusinessChatBotFile, fmt.Sprintf("%v/%v", pkg.Upload.Path, filename))
 	if err != nil {
 		zap.L().Error("[Upload] Store file failed", zap.Error(err))
 		return serializer.StoreFileError(err)

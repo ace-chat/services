@@ -25,6 +25,9 @@ const (
 	CodeNotFoundGeneratorItemError = 20013
 	CodeStoreFileError             = 20014
 	CodeMongoError                 = 20015
+	CodeLinksError                 = 20016
+	CodeQAError                    = 20017
+	CodeIllegalError               = 20018
 )
 
 func NeedLogin(c *gin.Context) {
@@ -126,11 +129,29 @@ func NotFoundServiceError(err error) Response {
 }
 
 func StoreFileError(err error) Response {
-	msg := "Failed to operate file"
+	msg := "failed to operate file"
 	return Err(CodeStoreFileError, msg, err)
 }
 
 func MongoError(err error) Response {
-	msg := "Query failed"
+	msg := "query failed"
 	return Err(CodeMongoError, msg, err)
+}
+
+func LinksError(err error) Response {
+	msg := "the link cannot be empty or the link format is wrong"
+	if err == nil {
+		err = errors.New(msg)
+	}
+	return Err(CodeLinksError, msg, err)
+}
+
+func QAError(err error) Response {
+	msg := "the link cannot be empty"
+	return Err(CodeQAError, msg, err)
+}
+
+func IllegalError() Response {
+	msg := "illegal operation"
+	return Err(CodeIllegalError, msg, errors.New(msg))
 }

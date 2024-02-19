@@ -31,6 +31,13 @@ func migration() {
 		&model.Analytics{},
 		&model.Service{},
 		&model.ChatBot{},
+		&model.BusinessChatBot{},
+		&model.BusinessChatBotLink{},
+		&model.BusinessChatBotQA{},
+		&model.BusinessChatBotSalesPitch{},
+		&model.BusinessChatBotFile{},
+		&model.BusinessChatBotOption{},
+		&model.BusinessChatBotPlatform{},
 	)
 
 	if err != nil {

@@ -29,6 +29,9 @@ func NewServer(mode string) *gin.Engine {
 		common := api.Group("/common")
 		common.Use(middleware.Auth())
 		{
+			common.POST("/sendVerifyCode", controller.CommonSendVerifyCode)
+			common.GET("/codes", controller.CommonCodes)
+			common.GET("/options", controller.CommonOptions)
 			common.GET("/platforms", controller.CommonPlatforms)
 			common.GET("/regions", controller.CommonRegion)
 			common.GET("/tones", controller.CommonTones)
@@ -180,6 +183,17 @@ func NewServer(mode string) *gin.Engine {
 				bot.GET("/getChatHistory", controller.BotHistory)
 				bot.GET("/getChatList", controller.BotChatList)
 				bot.POST("/ask", controller.BotAsk)
+			}
+
+			business := chat.Group("/business")
+			{
+				business.POST("/create", controller.BusinessCreate)
+				business.PUT("/changePlatform", controller.BusinessChangePlatform)
+				business.PUT("/changePhoneNumber", controller.BusinessChangePhoneNumber)
+				business.PUT("/manageUploadFiles", controller.BusinessManageUploadFiles)
+				business.PUT("/manageQA", controller.BusinessManageQuestionAndAnswer)
+				business.PUT("/manageSalesAndPitches", controller.BusinessManageSalesAndPitches)
+				business.DELETE("/delete", controller.BusinessDelete)
 			}
 		}
 	}

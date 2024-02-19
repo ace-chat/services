@@ -8,6 +8,42 @@ import (
 	"net/http"
 )
 
+func CommonSendVerifyCode(c *gin.Context) {
+	var request service.SendVerifyCodeRequest
+	if err := c.Bind(&request); err == nil {
+		user, ok := c.Get("user")
+		if !ok {
+			serializer.NeedLogin(c)
+			c.Abort()
+			return
+		}
+		res := request.Send(user.(model.User))
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, serializer.ParamError(err))
+	}
+}
+
+func CommonCodes(c *gin.Context) {
+	var request service.CodeRequest
+	if err := c.Bind(&request); err == nil {
+		res := request.GetCodes()
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, serializer.ParamError(err))
+	}
+}
+
+func CommonOptions(c *gin.Context) {
+	var request service.OptionsRequest
+	if err := c.Bind(&request); err == nil {
+		res := request.GetOptions()
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, serializer.ParamError(err))
+	}
+}
+
 func CommonPlatforms(c *gin.Context) {
 	var request service.PlatformRequest
 	if err := c.Bind(&request); err == nil {
@@ -72,7 +108,7 @@ func CommonCreateVoice(c *gin.Context) {
 
 /*
  * @Description: Save the generated voice to the database
-*/
+ */
 func CommonSaveVoice(c *gin.Context) {
 	var request service.CommonSaveVoiceRequest
 	if err := c.Bind(&request); err == nil {
