@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"go.uber.org/zap"
-	"gorm.io/gorm/clause"
 )
 
 type GetUserInfo struct{}
@@ -35,9 +34,15 @@ func (u *UpdateUserInfo) UpdateUserInfo(user model.User) serializer.Response {
 		Phone:       u.Phone,
 	}
 
-	var updatedUser model.User
-	resp := cache.DB.Model(&model.User{}).Clauses(clause.Returning{}).Where("id = ?", user.Id).Updates(&userModel).Scan(&updatedUser)
+	resp := cache.DB.Model(&model.User{}).Where("id = ?", user.Id).Updates(&userModel)
 	if resp.Error != nil {
+		zap.L().Error("[UpdateUserInfo] Update user failed", zap.Error(resp.Error))
+		return serializer.DBError(resp.Error)
+	}
+
+	updatedUser := model.User{}
+	result := cache.DB.Where("id = ?", user.Id).First(&updatedUser)
+	if result.Error != nil {
 		zap.L().Error("[UpdateUserInfo] Update user failed", zap.Error(resp.Error))
 		return serializer.DBError(resp.Error)
 	}
