@@ -119,3 +119,19 @@ func BusinessDelete(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, serializer.ParamError(err))
 	}
 }
+
+func BusinessGetChatBot(c *gin.Context) {
+	var request service.GetChatBotRequest
+	if err := c.Bind(&request); err == nil {
+		user, ok := c.Get("user")
+		if !ok {
+			serializer.NeedLogin(c)
+			c.Abort()
+			return
+		}
+		res := request.Get(user.(model.User))
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, serializer.ParamError(err))
+	}
+}

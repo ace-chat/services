@@ -32,7 +32,7 @@ func (r *ManageSalesAndPitchesRequest) Manage(user model.User) serializer.Respon
 	sp := model.BusinessChatBotSalesPitch{
 		BusinessBotId: chat.Id,
 	}
-	if err := cache.DB.Model(&model.BusinessChatBotSalesPitch{}).Delete(&sp).Error; err != nil {
+	if err := cache.DB.Model(&model.BusinessChatBotSalesPitch{}).Where("business_bot_id = ?", chat.Id).Delete(&sp).Error; err != nil {
 		zap.L().Error("[ManageQuestionAndAnswerRequest] Delete business chat bot sales pitch failed", zap.Error(err))
 		return serializer.DBError(err)
 	}

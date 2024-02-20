@@ -62,6 +62,19 @@ func (r *BusinessCreateRequest) CreateBusinessBot(user model.User) serializer.Re
 	}
 
 	tx := cache.DB.Begin()
+
+	var count int64
+	if err := tx.Model(&model.BusinessChatBot{}).Where("user_id = ?", user.Id).Count(&count).Error; err != nil {
+		zap.L().Error("[BusinessCreateRequest] Get business chat bot count failed", zap.Error(err))
+		tx.Rollback()
+		return serializer.DBError(err)
+	}
+
+	if count != 0 {
+		tx.Rollback()
+		return serializer.IllegalError()
+	}
+
 	businessBot := model.BusinessChatBot{
 		UserId:              user.Id,
 		CompanyName:         r.CompanyName,

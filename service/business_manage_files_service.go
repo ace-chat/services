@@ -34,7 +34,7 @@ func (r *ManageUploadFilesRequest) Manage(user model.User) serializer.Response {
 	}
 
 	// delete old files
-	if err := cache.DB.Model(&model.BusinessChatBotFile{}).Delete(&f).Error; err != nil {
+	if err := cache.DB.Model(&model.BusinessChatBotFile{}).Where("business_bot_id = ?", chat.Id).Delete(&f).Error; err != nil {
 		zap.L().Error("[AddMoreFileRequest] Delete business chat bot file failed", zap.Error(err))
 		return serializer.DBError(err)
 	}

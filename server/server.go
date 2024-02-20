@@ -194,6 +194,7 @@ func NewServer(mode string) *gin.Engine {
 				business.PUT("/manageQA", controller.BusinessManageQuestionAndAnswer)
 				business.PUT("/manageSalesAndPitches", controller.BusinessManageSalesAndPitches)
 				business.DELETE("/delete", controller.BusinessDelete)
+				business.GET("/getBusinessChatBot", controller.BusinessGetChatBot)
 			}
 		}
 	}

@@ -32,7 +32,7 @@ func (r *ManageQuestionAndAnswerRequest) Manage(user model.User) serializer.Resp
 	f := model.BusinessChatBotQA{
 		BusinessBotId: chat.Id,
 	}
-	if err := cache.DB.Model(&model.BusinessChatBotQA{}).Delete(&f).Error; err != nil {
+	if err := cache.DB.Model(&model.BusinessChatBotQA{}).Where("business_bot_id = ?", chat.Id).Delete(&f).Error; err != nil {
 		zap.L().Error("[ManageQuestionAndAnswerRequest] Delete business chat bot question and answer failed", zap.Error(err))
 		return serializer.DBError(err)
 	}

@@ -19,6 +19,8 @@ mysql:
 mongo:
     uri: "mongodb+srv://zubairahsan:dm6n1lFXCxx0I3W7@chatbot.d742zdu.mongodb.net/"
     db: "GP_chat_history"
+firebase:
+
 request:
     contentGeneration: "http://178.128.96.65:9005"
     chat: "http://178.128.96.65:9006"
