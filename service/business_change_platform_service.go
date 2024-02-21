@@ -13,8 +13,14 @@ type ChangeBusinessPlatformRequest struct {
 }
 
 func (r *ChangeBusinessPlatformRequest) Change(user model.User) serializer.Response {
+	var businessChatBotPlatform model.BusinessChatBotPlatform
+	if err := cache.DB.Model(&model.BusinessChatBotPlatform{}).Where("id = ?", *r.Id).Last(&businessChatBotPlatform).Error; err != nil {
+		zap.L().Error("[ChangeBusinessPlatformRequest] Get business chat bot platform failed", zap.Error(err))
+		return serializer.DBError(err)
+	}
+
 	var platform model.Platform
-	if err := cache.DB.Model(&model.Platform{}).Where("id = ?", *r.Id).First(&platform).Error; err != nil {
+	if err := cache.DB.Model(&model.Platform{}).Where("id = ?", businessChatBotPlatform.Platform).First(&platform).Error; err != nil {
 		zap.L().Error("[ChangeBusinessPlatformRequest] Get platform failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
@@ -33,13 +39,7 @@ func (r *ChangeBusinessPlatformRequest) Change(user model.User) serializer.Respo
 		return serializer.IllegalError()
 	}
 
-	var chat model.BusinessChatBot
-	if err := cache.DB.Model(&model.BusinessChatBot{}).Where("user_id = ?", user.Id).Last(&chat).Error; err != nil {
-		zap.L().Error("[ChangeBusinessPlatformRequest] Get business chat bot failed", zap.Error(err))
-		return serializer.DBError(err)
-	}
-
-	if err := cache.DB.Model(&model.BusinessChatBotPlatform{}).Where("business_bot_id = ? AND platform = ?", chat.Id, *r.Id).Update("status", *r.Status).Error; err != nil {
+	if err := cache.DB.Model(&model.BusinessChatBotPlatform{}).Where("id = ?", businessChatBotPlatform.Id).Update("status", *r.Status).Error; err != nil {
 		zap.L().Error("[ChangeBusinessPlatformRequest] Update business chat bot platform status failed", zap.Error(err))
 		return serializer.DBError(err)
 	}
