@@ -17,7 +17,10 @@ func (r *GetChatBotRequest) Get(user model.User) serializer.Response {
 	}
 
 	if count == 0 {
-		return serializer.IllegalError()
+		return serializer.Response{
+			Code: 200,
+			Data: true,
+		}
 	}
 
 	var chat model.BusinessChatBot
