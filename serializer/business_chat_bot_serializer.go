@@ -10,12 +10,18 @@ type SalesPitches struct {
 	Input string `json:"input"`
 }
 
+type Platform struct {
+	Id     uint   `json:"id"`
+	Name   string `json:"name"`
+	Status bool   `json:"status"`
+}
+
 type BusinessChatBot struct {
 	Id                  uint                `json:"id"`
 	CompanyName         string              `json:"company_name"`
 	Links               []string            `json:"links"`
 	CompanyIntroduction string              `json:"company_introduction"`
-	Platform            []uint              `json:"platform"`
+	Platform            []Platform          `json:"platform"`
 	PhoneNumber         string              `json:"phone_number"`
 	Tone                uint                `json:"tone"`
 	QA                  []QuestionAndAnswer `json:"qa"`

@@ -35,9 +35,15 @@ func (r *GetChatBotRequest) Get(user model.User) serializer.Response {
 		return serializer.DBError(err)
 	}
 
-	ps := make([]uint, 0)
+	ps := make([]serializer.Platform, 0)
 	for _, platform := range platforms {
-		ps = append(ps, platform.Platform)
+		var p model.Platform
+		cache.DB.Model(&model.Platform{}).Where("id = ?", platform.Platform).Last(&p)
+		ps = append(ps, serializer.Platform{
+			Id:     platform.Id,
+			Name:   p.Name,
+			Status: platform.Status,
+		})
 	}
 
 	qas := make([]serializer.QuestionAndAnswer, 0)
