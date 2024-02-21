@@ -12,14 +12,14 @@ import (
 )
 
 type BusinessCreateRequest struct {
-	CompanyName         string                         `form:"companyName" json:"companyName" binding:"required"`
+	CompanyName         string                         `form:"company_name" json:"company_name" binding:"required"`
 	Links               []string                       `form:"links" json:"links" binding:"required"`
-	CompanyIntroduction string                         `form:"companyIntroduction" json:"companyIntroduction" binding:"required"`
+	CompanyIntroduction string                         `form:"company_introduction" json:"company_introduction" binding:"required"`
 	Platform            int                            `form:"platform" json:"platform" binding:"required"`
-	PhoneNumber         string                         `form:"phoneNumber" json:"phoneNumber" binding:"required"`
+	PhoneNumber         string                         `form:"phone_number" json:"phone_number" binding:"required"`
 	Tone                int                            `form:"tone" json:"tone" binding:"required"`
 	QA                  []serializer.QuestionAndAnswer `form:"qa" json:"qa" binding:"required"`
-	SalesPitches        []serializer.SalesPitches      `form:"salesPitches" json:"salesPitches"`
+	SalesPitches        []serializer.SalesPitches      `form:"sales_pitches" json:"sales_pitches"`
 	Files               []string                       `form:"files" json:"files"`
 }
 
