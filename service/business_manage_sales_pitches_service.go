@@ -9,7 +9,7 @@ import (
 
 type ManageSalesAndPitchesRequest struct {
 	Id           uint                      `form:"id" json:"id" binding:"required"`
-	SalesPitches []serializer.SalesPitches `form:"salesPitches" json:"salesPitches" binding:"required"`
+	SalesPitches []serializer.SalesPitches `form:"sales_pitches" json:"sales_pitches" binding:"required"`
 }
 
 func (r *ManageSalesAndPitchesRequest) Manage(user model.User) serializer.Response {
