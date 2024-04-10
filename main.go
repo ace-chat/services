@@ -9,8 +9,9 @@ import (
 	"ace/server"
 	"flag"
 	"fmt"
-	"go.uber.org/zap"
 	"os"
+
+	"go.uber.org/zap"
 )
 
 func main() {

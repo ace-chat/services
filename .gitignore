@@ -29,3 +29,9 @@ target/
 
 *.exe
 go_build_ace
+
+# config file
+conf.yaml
+
+# vscode
+.vscode
